@@ -1,0 +1,3760 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>⚽ Liga Manajer Indonesia</title>
+<meta name="theme-color" content="#16241d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" id="pwaManifest">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:radial-gradient(circle at 20% 0%,#16241d 0%,#0b120f 60%);
+  color:#e8f0ec;min-height:100vh;padding:12px;overflow-x:hidden}
+.wrap{max-width:940px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:center;
+  padding:12px 14px;margin-bottom:12px;border-radius:14px;
+  background:linear-gradient(100deg,#1b3a2c,#12261d);
+  border:1px solid #2c4a3a;box-shadow:0 6px 24px rgba(0,0,0,.35);
+  position:sticky;top:6px;z-index:50}
+header h1{font-size:16px;letter-spacing:.5px;cursor:pointer;user-select:none}
+#hdr-sub{font-size:10px;color:#8fbfa4;text-align:right;line-height:1.5}
+.card{background:#131e19;border:1px solid #24382e;border-radius:14px;
+  padding:14px;margin-bottom:12px}
+h2{font-size:15px;margin-bottom:10px;color:#a8e6c1}
+h3{font-size:12px;color:#7fae94;margin:12px 0 8px;text-transform:uppercase;letter-spacing:1px}
+h4{font-size:11px;color:#7fae94;margin:8px 0 4px;text-transform:uppercase;letter-spacing:1px}
+.btn{background:#1d3227;color:#c8f0d8;border:1px solid #2f5442;
+  padding:8px 14px;border-radius:9px;cursor:pointer;font-size:12px;
+  font-weight:600;font-family:inherit;transition:.15s}
+.btn:hover{background:#26432f}
+.btn.primary{background:linear-gradient(100deg,#2ecc71,#20a35a);color:#04160c;border:none}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.small{padding:5px 10px;font-size:11px}
+.btn.danger{background:#3a1d20;border-color:#e63946;color:#ff8f96}
+.btn.gold{background:linear-gradient(100deg,#ffd700,#ffaa00);color:#1a1400;border:none;font-weight:800}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.team-card{background:#16241d;border:1px solid #27402f;border-radius:10px;
+  padding:10px;cursor:pointer;transition:.18s;position:relative;overflow:hidden}
+.team-card:hover{transform:translateY(-2px);border-color:#3f7a5a}
+.team-card .bar{position:absolute;left:0;top:0;bottom:0;width:4px}
+.team-card .nm{font-weight:700;font-size:13px;margin-left:6px}
+.team-card .mt{font-size:10px;color:#8bb59f;margin-left:6px;margin-top:4px}
+.div-label{display:inline-block;padding:2px 7px;border-radius:5px;font-size:9px;
+  font-weight:800;margin-left:6px;letter-spacing:.5px}
+.div-1{background:#e9c46a;color:#1a1400}
+.div-2{background:#457b9d;color:#fff}
+.tabs{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.tab{padding:7px 12px;border-radius:8px;background:#131e19;border:1px solid #24382e;
+  cursor:pointer;font-size:12px;font-weight:600;color:#8bb59f;white-space:nowrap}
+.tab.active{background:#2ecc71;color:#04160c;border-color:#2ecc71}
+.plist{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:600px){.plist{grid-template-columns:1fr}}
+.pcard{display:flex;align-items:center;gap:8px;padding:7px 10px;
+  background:#182720;border:1px solid #24382e;border-radius:9px;
+  cursor:pointer;transition:.13s;font-size:12px}
+.pcard:hover{border-color:#3f7a5a;background:#1d3026}
+.pcard.sel{border-color:#2ecc71;background:#1b3a28;box-shadow:0 0 0 2px rgba(46,204,113,.25)}
+.pos{width:34px;text-align:center;font-size:9px;font-weight:800;padding:3px 0;
+  border-radius:5px;letter-spacing:.5px;display:inline-block}
+.pos.GK{background:#5e60ce;color:#fff}
+.pos.DEF{background:#2a9d8f;color:#04160c}
+.pos.MID{background:#e9c46a;color:#241c00}
+.pos.FWD{background:#e63946;color:#fff}
+.pos-mini{display:inline-block;font-size:8px;font-weight:800;padding:1px 5px;
+  border-radius:4px;margin-right:2px;letter-spacing:.3px}
+.pname{flex:1;font-weight:600}
+.pmeta{font-size:10px;color:#7fae94}
+.rate{font-weight:800;font-size:13px;color:#a8e6c1;min-width:22px;text-align:right}
+.special-icon{display:inline-block;font-size:14px;margin-left:4px;cursor:pointer;
+  filter:drop-shadow(0 0 3px #ffd700)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{text-align:left;padding:6px 4px;color:#7fae94;font-size:9px;
+  text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #24382e}
+td{padding:6px 4px;border-bottom:1px solid #1b2a22}
+tr.mine td{background:rgba(46,204,113,.12);font-weight:700}
+tr.mine td:first-child{border-left:3px solid #2ecc71}
+tr.rel td{background:rgba(230,57,70,.10)}
+tr.rel td:first-child{border-left:3px solid #e63946}
+tr.pro td{background:rgba(46,204,113,.08)}
+tr.pro td:first-child{border-left:3px solid #2ecc71}
+.num{text-align:center}
+.scoreboard{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  gap:10px;padding:16px;background:linear-gradient(100deg,#132018,#0d1a14);
+  border-radius:14px;border:1px solid #24382e;margin-bottom:12px}
+.sb-team{text-align:center;font-weight:700;font-size:13px}
+.sb-badge{width:38px;height:38px;border-radius:50%;margin:0 auto 6px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900}
+.score{font-size:30px;font-weight:900;letter-spacing:2px;color:#fff;
+  transition:.2s;font-variant-numeric:tabular-nums;text-align:center}
+.score.pulse{color:#2ecc71;transform:scale(1.12)}
+.events{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
+.event{padding:7px 10px;border-radius:8px;font-size:11px;
+  background:#16241d;border-left:3px solid #2f5442;animation:slide .3s ease}
+.event.goal{background:#1d3a27;border-left-color:#2ecc71;font-weight:700}
+.event.goal.away{background:#3a1d20;border-left-color:#e63946}
+.event.card{background:#332c14;border-left-color:#e9c46a}
+.event.commentary{background:#0f1a15;border-left-color:#3a5a4a;
+  color:#a8bfb4;font-style:italic;font-size:10px}
+@keyframes slide{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+.badge-round{display:inline-block;background:#1d3227;color:#8fbfa4;
+  padding:3px 9px;border-radius:16px;font-size:11px;font-weight:600}
+.empty{color:#5f7d6c;font-size:12px;padding:14px;text-align:center}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#e63946;color:#fff;padding:10px 18px;border-radius:10px;
+  font-size:12px;font-weight:600;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,.5);
+  max-width:88vw;text-align:center}
+.div-toggle{display:flex;gap:6px;margin-bottom:10px}
+.div-toggle .tab{font-size:11px;padding:5px 12px}
+.scroll-box{max-height:440px;overflow-y:auto}
+.scroll-box::-webkit-scrollbar{width:5px}
+.scroll-box::-webkit-scrollbar-thumb{background:#2f5442;border-radius:3px}
+.pitch-wrap{background:#0d1a14;padding:8px;border-radius:14px;
+  border:1px solid #24382e;margin-bottom:12px}
+.pitch{width:100%;display:block;border-radius:8px;background:#2d6b3a}
+.pitch .pp{transition:transform .45s ease}
+.pitch .ball{transition:transform .45s ease}
+.stamina-bar{width:36px;height:5px;background:#2c3a33;border-radius:3px;
+  overflow:hidden;display:inline-block;margin-left:4px;vertical-align:middle}
+.stamina-fill{height:100%;background:#2ecc71;transition:.3s}
+.stamina-fill.mid{background:#e9c46a}
+.stamina-fill.low{background:#e63946}
+.inj-badge{background:#e63946;color:#fff;font-size:9px;font-weight:800;
+  padding:2px 5px;border-radius:4px;margin-left:4px}
+.bracket{display:flex;gap:8px;overflow-x:auto;padding:8px 0}
+.bracket-col{min-width:150px;display:flex;flex-direction:column;justify-content:space-around;gap:8px}
+.bracket-match{background:#182720;border:1px solid #2f5442;border-radius:8px;padding:6px 8px;font-size:11px}
+.bracket-match.mine{border-color:#2ecc71;background:#1b3a28}
+.bracket-match .win{color:#a8e6c1;font-weight:700}
+.bracket-match .lose{color:#7fae94;opacity:.6}
+.news-item{background:#16241d;border-left:3px solid #457b9d;border-radius:8px;
+  padding:8px 10px;margin-bottom:6px;font-size:12px}
+.news-item .head{color:#a8e6c1;font-weight:700;margin-bottom:2px;font-size:11px}
+.news-item .time{font-size:9px;color:#7fae94;text-transform:uppercase;letter-spacing:1px}
+.pc-answer{display:block;width:100%;text-align:left;padding:10px;margin-bottom:6px;
+  background:#182720;border:1px solid #2f5442;border-radius:8px;color:#e8f0ec;
+  font-size:12px;cursor:pointer;font-family:inherit}
+.pc-answer:hover{background:#1d3026;border-color:#2ecc71}
+#devPanel{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:14px}
+#devPanel .inner{background:#0f1a15;border:2px solid #ffd700;border-radius:14px;
+  padding:16px;max-width:420px;width:100%;max-height:88vh;overflow-y:auto;
+  box-shadow:0 0 40px rgba(255,215,0,.3)}
+#devPanel h2{color:#ffd700;text-align:center;margin-bottom:4px;font-size:16px}
+#devPanel .sub{text-align:center;color:#8bb59f;font-size:11px;margin-bottom:14px}
+#devPanel .btn{width:100%;margin-bottom:6px;text-align:left}
+#devPanel .sect{color:#7fae94;font-size:10px;text-transform:uppercase;
+  letter-spacing:1px;margin:12px 0 6px}
+#devBadge{position:fixed;top:8px;right:8px;background:#ffd700;color:#1a1400;
+  font-size:10px;font-weight:900;padding:3px 8px;border-radius:6px;z-index:150;
+  letter-spacing:1px;animation:devPulse 1.5s infinite}
+@keyframes devPulse{0%,100%{opacity:1}50%{opacity:.55}}
+#createModal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:210;
+  display:flex;align-items:center;justify-content:center;padding:14px}
+#createModal .inner{background:#0f1a15;border:2px solid #2ecc71;border-radius:14px;
+  padding:16px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto}
+#createModal h2{color:#a8e6c1;text-align:center;margin-bottom:4px;font-size:16px}
+#createModal .sub{text-align:center;color:#8bb59f;font-size:11px;margin-bottom:14px}
+#createModal label{display:block;font-size:11px;color:#7fae94;
+  text-transform:uppercase;letter-spacing:1px;margin:10px 0 4px}
+#createModal input,#createModal select{width:100%;padding:9px 10px;
+  background:#182720;border:1px solid #2f5442;border-radius:8px;
+  color:#e8f0ec;font-size:13px;font-family:inherit}
+#createModal input:focus,#createModal select:focus{outline:none;border-color:#2ecc71}
+#createModal .cost{background:#16241d;padding:8px 10px;border-radius:8px;
+  font-size:12px;color:#a8e6c1;margin-top:10px;text-align:center}
+#createModal .row{margin-top:14px}
+#createModal .row .btn{flex:1}
+
+body.light{background:radial-gradient(circle at 20% 0%,#e8f5ee 0%,#d5e8dc 60%);color:#1a2e22}
+body.light header{background:linear-gradient(100deg,#fff,#f0f7f3);border-color:#a8d4bc}
+body.light .card{background:#fff;border-color:#c8e0d2}
+body.light .btn{background:#d6ecdc;color:#0a3a1f;border-color:#7fbf96}
+body.light .btn.primary{background:linear-gradient(100deg,#2ecc71,#20a35a);color:#04160c}
+body.light .tab{background:#e0efe5;color:#3a6b4a;border-color:#a8d4bc}
+body.light .tab.active{background:#2ecc71;color:#04160c}
+body.light h2{color:#1a6b3a}
+body.light td{border-color:#d6e8dc}
+body.light th{color:#5a8a6a}
+body.light .pcard,body.light .team-card{background:#f0f7f3;border-color:#c8e0d2}
+body.light .event{background:#e8f0eb;color:#1a2e22}
+body.light #hdr-sub{color:#5a8a6a}
+body.light .scoreboard{background:linear-gradient(100deg,#f0f7f3,#e8f0eb)}
+body.light .score{color:#0a3a1f}
+body.light .news-item{background:#f0f7f3}
+body.light .bracket-match{background:#f0f7f3}
+body.light .pc-answer{background:#f0f7f3;color:#1a2e22}
+body.light .empty{color:#8ba899}
+
+@media(max-width:400px){
+  body{padding:8px}
+  header{padding:10px 10px}
+  header h1{font-size:14px}
+  .btn{padding:7px 11px;font-size:11px}
+  .tab{padding:6px 9px;font-size:11px}
+  .score{font-size:24px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="appTitle">⚽ LIGA INDONESIA</h1>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="btn small" id="soundBtn" onclick="toggleSound()">🔊</button>
+      <button class="btn small" id="themeBtn" onclick="toggleTheme()">🌙</button>
+      <div id="hdr-sub"></div>
+    </div>
+  </header>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ==================== UTIL ==================== */
+const rnd=(a,b)=>Math.random()*(b-a)+a;
+const ri=(a,b)=>Math.floor(rnd(a,b+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:60;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+function formatIDR(n){
+  const rp=Math.abs(n);
+  const sign=n<0?'-':'';
+  if(rp>=1e15) return `${sign}Rp ${(rp/1e15).toFixed(2)} P`;
+  if(rp>=1e12) return `${sign}Rp ${(rp/1e12).toFixed(2)} T`;
+  if(rp>=1e9)  return `${sign}Rp ${(rp/1e9).toFixed(2)} M`;
+  if(rp>=1e6)  return `${sign}Rp ${(rp/1e6).toFixed(1)} jt`;
+  if(rp>=1e3)  return `${sign}Rp ${(rp/1e3).toFixed(0)} rb`;
+  return `${sign}Rp ${Math.round(rp)}`;
+}
+
+/* ==================== BANK NAMA ==================== */
+const NAMA_DEPAN=[
+  'Budi','Agus','Slamet','Bambang','Joko','Wawan','Tono','Sutrisno','Sumarno','Sukarno',
+  'Wahyu','Bowo','Wahono','Sutopo','Bagus','Yanto','Krisna','Bramantyo','Adipati','Wisnu',
+  'Bimo','Aryo','Damar','Bayu','Galih','Rangga','Yoga','Hendra','Heru','Wibowo',
+  'Harto','Hartono','Sarwono','Suparman','Purnomo','Wardoyo','Sugeng','Sugiyanto','Teguh','Tri',
+  'Budiarto','Sudarmono','Suryanto','Utomo','Waluyo','Wibisono','Yulianto','Eko','Edi','Dwi',
+  'Ujang','Asep','Dedi','Dadan','Yudi','Iwan','Endang','Rian','Ridwan','Deden',
+  'Ahmad','Cecep','Nandang','Adang','Deni','Rudi','Undang','Taufik','Iman','Udin',
+  'Hendi','Yana','Supri','Tarya','Binsar','Bona','Togar','Ronald','Hotman','Maruli',
+  'Lamhot','Rudolf','Tigor','Bistok','Hasudungan','Tumbur','Parlindungan','Sahat','Bastian','Rikson',
+  'Adi','Yendra','Rizal','Yusra','Firman','Yuli','Arif','Doni','Reza','Riki',
+  'Yogi','Rama','Andre','Rahmat','Hendri','Feri','Andi','Baso','Daeng','Karim',
+  'Muhammad','Yusuf','Hasim','Rahman','Salim','Wayan','Made','Nyoman','Ketut','Gede',
+  'Putu','Kadek','Komang','Agung','Ida','Abdul','Abdullah','Hasan','Husain','Ibrahim',
+  'Fauzi','Hamzah','Idris','Iskandar','Salman','Umar','Utsman','Ali','Zaid','Ridho',
+  'Fikri','Hafiz','Faris','Zaki','Rafi','Alif','Naufal','Daffa','Farhan','Fajar',
+  'Rizky','Rizki','Rizka','Bima','Satria','Panji','Ilham','Arya','Dimas','Adit',
+  'Gilang','Vino','Rio','Anton','Bagas','Bintang','Cahyo','Dani','Farel','Ferdi',
+  'Hanif','Iqbal','Jefri','Kevin','Lukman','Maulana','Nanda','Okta','Pandu','Qori',
+  'Rendi','Sandi','Tama','Ucok','Vicky','Yudha','Zulfikar','Alvin','Beben','Dika',
+  'Elang','Fathan','Genta','Hendra','Iwan','Joni','Kurnia','Lukito','Miko','Nata'
+];
+const NAMA_TENGAH=[
+  'Adi','Aji','Alam','Anugrah','Ardi','Arif','Arya','Bagas','Bagus','Bakti',
+  'Bayu','Bima','Budi','Cahya','Cakra','Damar','Darma','Dewa','Dharma','Dwi',
+  'Eka','Eko','Fajar','Fikri','Galih','Genta','Giri','Gunawan','Hadi','Hakim',
+  'Hendra','Hidayat','Ilham','Indra','Iqbal','Irawan','Jaya','Karya','Kusuma','Laksana',
+  'Lestari','Maulana','Mulya','Nanda','Nugraha','Nur','Pandu','Pangestu','Perkasa','Prabowo',
+  'Pradana','Prakoso','Pratama','Purnama','Putra','Putri','Rahayu','Rahman','Rahmat','Rizki',
+  'Rizky','Sakti','Saputra','Satria','Setiawan','Sidiq','Surya','Susanto','Tama','Teguh',
+  'Tri','Utama','Wahyu','Wibawa','Wijaya','Wira','Yudha','Yulianto','Zaki','Arta',
+  'Aditya','Bagaskara','Baskara','Cendekia','Dermawan','Dirgantara','Firdaus','Gunadi','Hartanto','Iskandar',
+  'Jatmiko','Kartika','Kurnia','Laksmana','Mahendra','Nugroho','Pramudya','Raharjo','Santika','Sasmita'
+];
+const NAMA_BELAKANG=[
+  'Santoso','Wijaya','Susanto','Hartono','Suryana','Kusuma','Santika','Wibowo','Purnomo','Setiawan',
+  'Nugroho','Saputra','Hidayat','Kurniawan','Permana','Wardana','Prabowo','Utomo','Suharto','Sudirman',
+  'Gunawan','Wibisono','Santosa','Rahardjo','Suryanto','Waluyo','Siswanto','Hariyanto','Prasetyo','Sutanto',
+  'Sugiarto','Suprapto','Supriyadi','Widodo','Wijayanti','Hartatik','Yulianti','Herdiana','Sudrajat','Suryadi',
+  'Supriatna','Suhanda','Suhendar','Kurnia','Setiadi','Wijayanto','Siregar','Simbolon','Nasution','Sitompul',
+  'Hutapea','Panjaitan','Sinaga','Sihombing','Sitohang','Napitupulu','Lubis','Harahap','Pulungan','Daulay',
+  'Hasibuan','Ritonga','Simanjuntak','Samosir','Tampubolon','Marbun','Sidabutar','Manurung','Sihaloho','Gultom',
+  'Hutagalung','Tanjung','Silalahi','Nainggolan','Simatupang','Sutan','Rajo','Datuk','Malik','Rasyid',
+  'Ibrahim','Yusuf','Hasan','Rahman','Chaniago','Koto','Piliang','Dalimo','Sikumbang','Tanjuang',
+  'Canigo','Gunung','Jambak','Daeng','Karim','Sultan','Hamid','Sutedja','Wirawan','Sukarta',
+  'Ardana','Suardana','Suardika','Sujana','Suwitra','Yadnya','Adnyana','Wiranata','Mahendra','Arimbawa',
+  'Hakim','Husain','Fauzi','Ridho','Latif','Wahid','Chalid','Syafii','Habib','Pratama',
+  'Putra','Firdaus','Pangestu','Prakoso','Firmansyah','Ramadhan','Iskandar','Syahputra','Muliana','Anggara'
+];
+function generateIndonesianName(){
+  const r=Math.random();
+  if(r<0.15) return pick(NAMA_DEPAN);
+  if(r<0.70){
+    const mode=Math.random();
+    if(mode<0.55) return pick(NAMA_DEPAN)+' '+pick(NAMA_BELAKANG);
+    if(mode<0.80) return pick(NAMA_DEPAN)+' '+pick(NAMA_TENGAH);
+    return pick(NAMA_TENGAH)+' '+pick(NAMA_BELAKANG);
+  }
+  return pick(NAMA_DEPAN)+' '+pick(NAMA_TENGAH)+' '+pick(NAMA_BELAKANG);
+}
+
+/* ==================== FORMASI & TAKTIK ==================== */
+const FORMATIONS={
+  '4-3-3':{GK:1,DEF:4,MID:3,FWD:3},
+  '4-4-2':{GK:1,DEF:4,MID:4,FWD:2},
+  '3-5-2':{GK:1,DEF:3,MID:5,FWD:2},
+  '5-3-2':{GK:1,DEF:5,MID:3,FWD:2}
+};
+const FORMATION_POS={
+  '4-3-3':{GK:[[4,32]],DEF:[[18,10],[18,22],[18,42],[18,54]],MID:[[34,20],[34,32],[34,44]],FWD:[[52,15],[52,32],[52,49]]},
+  '4-4-2':{GK:[[4,32]],DEF:[[18,10],[18,22],[18,42],[18,54]],MID:[[36,10],[36,24],[36,40],[36,54]],FWD:[[54,22],[54,42]]},
+  '3-5-2':{GK:[[4,32]],DEF:[[18,16],[18,32],[18,48]],MID:[[36,8],[36,20],[36,32],[36,44],[36,56]],FWD:[[54,22],[54,42]]},
+  '5-3-2':{GK:[[4,32]],DEF:[[16,6],[16,19],[16,32],[16,45],[16,58]],MID:[[36,16],[36,32],[36,48]],FWD:[[54,22],[54,42]]}
+};
+const MENTALITY={
+  'defensif':{label:'🛡️ Defensif',desc:'Bertahan rapat'},
+  'seimbang':{label:'⚖️ Seimbang',desc:'Bermain normal'},
+  'menyerang':{label:'⚔️ Menyerang',desc:'Tekan tinggi'}
+};
+
+/* ==================== POSISI & KEAHLIAN ==================== */
+const POSITION_COMPAT={
+  GK:  {secondaries:[],                       max:1},
+  DEF: {secondaries:['DEF','MID'],            max:3},
+  MID: {secondaries:['MID','DEF','FWD'],      max:3},
+  FWD: {secondaries:['FWD','MID'],            max:3}
+};
+const SKILL_POOL={
+  GK:[
+    'Refleks','Posisi','Distribusi','Penyelamatan Penalti','Sweeper Keeper',
+    'One-on-One','Kontrol Udara','Lemparan Jauh'
+  ],
+  DEF:[
+    'Tackling','Marking','Heading','Intersepsi','Aerial','Slide Tackle',
+    'Blok','Kekuatan Fisik','Konsentrasi','Kecepatan'
+  ],
+  MID:[
+    'Passing','Vision','Dribbling','Stamina','Long Shot','Playmaker',
+    'Ball Control','Crossing','Work Rate','Tackling'
+  ],
+  FWD:[
+    'Finishing','Dribbling','Pace','Header','Long Shot','Poacher',
+    'Movement','Off The Ball','Volley','Penalti'
+  ]
+};
+const SPECIAL_SKILLS={
+  golden:[
+    {id:'freekick', icon:'🎯', name:'Free Kick Maestro',  desc:'+25% gol dari tendangan bebas'},
+    {id:'clutch',   icon:'🔥', name:'Clutch Player',      desc:'+rating di babak 2'},
+    {id:'ironman',  icon:'💪', name:'Iron Man',           desc:'-50% risiko cedera'},
+    {id:'biggame',  icon:'🏆', name:'Big Game Player',    desc:'+rating di laga besar'},
+    {id:'speed',    icon:'⚡', name:'Speedster',          desc:'+peluang gol dari serangan cepat'},
+    {id:'leader',   icon:'👑', name:'Natural Leader',     desc:'+5% atk tim'},
+    {id:'maestro',  icon:'🎪', name:'Playmaker Elite',    desc:'+50% peluang asis'},
+    {id:'finisher', icon:'🥅', name:'Deadly Finisher',    desc:'+30% peluang gol'}
+  ],
+  elite:[
+    {id:'freekick', icon:'🎯', name:'Free Kick Specialist',  desc:'+15% gol tendangan bebas'},
+    {id:'clutch',   icon:'🔥', name:'Big Match Player',      desc:'+rating di laga penting'},
+    {id:'ironman',  icon:'💪', name:'Durable',               desc:'-30% risiko cedera'},
+    {id:'speed',    icon:'⚡', name:'Quick Feet',            desc:'+kecepatan'},
+    {id:'maestro',  icon:'🎪', name:'Creative',              desc:'+25% peluang asis'},
+    {id:'finisher', icon:'🥅', name:'Sharp Shooter',         desc:'+15% peluang gol'},
+    {id:'leader',   icon:'👑', name:'Team Captain Material', desc:'+3% atk tim'}
+  ]
+};
+
+/* ==================== CEDERA, CUACA, TEAM TALK ==================== */
+const INJURIES=['Cedera hamstring','Cedera engkel','Cedera lutut','Cedera paha',
+  'Cedera otot','Cedera kepala ringan','Cedera bahu','Memar kaki'];
+const STAMINA_COST=18;
+const STAMINA_RECOVER=35;
+const WEATHERS=[
+  {name:'Cerah',   icon:'☀️', goal:1.00, injury:1.0, stam:1.0},
+  {name:'Berawan', icon:'⛅', goal:1.00, injury:1.0, stam:1.0},
+  {name:'Hujan',   icon:'🌧️', goal:0.85, injury:1.4, stam:1.1},
+  {name:'Panas',   icon:'🔥', goal:0.90, injury:1.2, stam:1.5},
+  {name:'Berkabut',icon:'🌫️', goal:0.95, injury:1.1, stam:1.05}
+];
+const TEAM_TALKS=[
+  {id:'marah',    label:'😡 Marah',    desc:'Tegur keras — serang lebih agresif', atk:0.18, def:-0.10},
+  {id:'tenang',   label:'😌 Tenang',   desc:'Perkuat pertahanan, jaga hasil',     atk:-0.08, def:0.15},
+  {id:'motivasi', label:'💪 Motivasi', desc:'Seimbang & semangat',                atk:0.10, def:0.10},
+  {id:'diam',     label:'🤐 Diam',     desc:'Tidak bicara',                       atk:0,    def:0}
+];
+const PROMOTED=3;
+const RELEGATED=3;
+const TOTAL_ROUNDS=19;
+
+/* ==================== STADION ==================== */
+const STADIUM_LEVELS=[
+  {cap:8000,   name:'Stadion Kampung',  cost:0,       ticket:100000, level:1},
+  {cap:18000,  name:'Stadion Kota',     cost:80e9,    ticket:300000, level:2},
+  {cap:35000,  name:'Stadion Provinsi', cost:250e9,   ticket:600000, level:3},
+  {cap:60000,  name:'Stadion Nasional', cost:600e9,   ticket:1000000,level:4},
+  {cap:100000, name:'Stadion Mega',     cost:1500e9,  ticket:1500000,level:5},
+  {cap:150000, name:'Stadion Raksasa',  cost:3500e9,  ticket:2000000,level:6}
+];
+
+/* ==================== SPONSOR ==================== */
+const SPONSOR_POOL=[
+  {name:'Bank Nusantara',  tier:'lokal',   color:'#e63946'},
+  {name:'Toko Merah',      tier:'lokal',   color:'#d90429'},
+  {name:'Kopi Kapal Api',  tier:'lokal',   color:'#8b0000'},
+  {name:'Sido Muncul',     tier:'lokal',   color:'#2a9d8f'},
+  {name:'Indomie',         tier:'lokal',   color:'#f4a261'},
+  {name:'Teh Botol Sosro', tier:'lokal',   color:'#e63946'},
+  {name:'Telkomsel',       tier:'nasional',color:'#e63946'},
+  {name:'Bank Mandiri',    tier:'nasional',color:'#1a3a8f'},
+  {name:'BCA',             tier:'nasional',color:'#0033a0'},
+  {name:'BRI',             tier:'nasional',color:'#1a3a8f'},
+  {name:'BNI',             tier:'nasional',color:'#e67e22'},
+  {name:'Pertamina',       tier:'nasional',color:'#00a651'},
+  {name:'Garuda Indonesia',tier:'nasional',color:'#0033a0'},
+  {name:'Astra Honda',     tier:'nasional',color:'#d90429'},
+  {name:'GoTo Group',      tier:'jumbo',   color:'#00aa13'},
+  {name:'Tokopedia',       tier:'jumbo',   color:'#42b549'},
+  {name:'Grab Indonesia',  tier:'jumbo',   color:'#00b14f'},
+  {name:'Shopee Arena',    tier:'jumbo',   color:'#ee4d2d'},
+  {name:'Bank Jago',       tier:'jumbo',   color:'#ff7a00'},
+  {name:'Djarum Master',   tier:'mega',    color:'#8b0000'},
+  {name:'Gudang Garam',    tier:'mega',    color:'#cc0000'},
+  {name:'Sampoerna Global',tier:'mega',    color:'#001a4d'},
+  {name:'Toyota Astra',    tier:'mega',    color:'#d90429'},
+  {name:'Adaro Energy',    tier:'mega',    color:'#333'}
+];
+const SPONSOR_TIERS={
+  lokal:    {annualMin:5e9,  annualMax:15e9, bonus:0.05},
+  nasional: {annualMin:15e9, annualMax:50e9, bonus:0.10},
+  jumbo:    {annualMin:50e9, annualMax:150e9, bonus:0.20},
+  mega:     {annualMin:150e9,annualMax:500e9, bonus:0.40}
+};
+const SPONSOR_BONUSES={
+  juara_liga:0.50, runner_up:0.25, top4:0.10,
+  juara_piala:0.30, juara_lca:1.00
+};
+
+/* ==================== TIM ASING ==================== */
+const ASIAN_TEAMS=[
+  {name:'Al Hilal',          color:'#0033a0', rating:82},
+  {name:'Al Nassr',          color:'#ffd700', rating:81},
+  {name:'Persepolis',        color:'#e63946', rating:79},
+  {name:'Ulsan Hyundai',     color:'#457b9d', rating:80},
+  {name:'Kawasaki Frontale', color:'#2a9d8f', rating:79},
+  {name:'Buriram United',    color:'#1a3a8f', rating:76},
+  {name:"Johor Darul Ta'zim",color:'#8ac926', rating:77},
+  {name:'Shanghai Port',     color:'#d90429', rating:78}
+];
+const FOREIGN_TEAMS=[
+  {name:'KL Selangor',     color:'#ffd700'},
+  {name:'Bangkok United',  color:'#457b9d'},
+  {name:'Hanoi FC',        color:'#e63946'},
+  {name:'Singapore Lions', color:'#2a9d8f'}
+];
+
+/* ==================== IPO & PEMAIN CUSTOM ==================== */
+const IPO_CONFIG={
+  minBudget: 300e9,
+  minReputation: 60,
+  minTrophy: 1,
+  shareCount: 1000000,
+  publicPct: 0.30,
+  basePrice: 50000
+};
+const CREATE_TIERS={
+  normal:  {label:'Normal',       talent:1.0, cost:20e9,  potBonus:6,  color:'#7fae94'},
+  talented:{label:'✦ Berbakat',   talent:1.2, cost:50e9,  potBonus:12, color:'#e9c46a'},
+  elite:   {label:'⭐ Istimewa',  talent:1.5, cost:120e9, potBonus:18, color:'#a8e6c1'},
+  golden:  {label:'🌟 Golden Boy',talent:2.0, cost:300e9, potBonus:25, color:'#ffd700'}
+};
+
+/* ==================== DATA 40 KLUB ==================== */
+const TEAM_DEFS=[
+  // DIVISI 1 (20 tim)
+  {name:'Papua',             div:1, color:'#e63946', base:78},
+  {name:'Jawa Barat United', div:1, color:'#f4a261', base:77},
+  {name:'Bali',              div:1, color:'#2a9d8f', base:76},
+  {name:'Sumatera Utara',    div:1, color:'#e9c46a', base:75},
+  {name:'Jawa Timur',        div:1, color:'#457b9d', base:75},
+  {name:'Sulawesi Selatan',  div:1, color:'#5e60ce', base:74},
+  {name:'DKI Jakarta',       div:1, color:'#8ac926', base:74},
+  {name:'Jawa Tengah',       div:1, color:'#ff6b6b', base:73},
+  {name:'Sumatera Selatan',  div:1, color:'#06d6a0', base:72},
+  {name:'Kalimantan Timur',  div:1, color:'#118ab2', base:72},
+  {name:'Banten',            div:1, color:'#ef476f', base:71},
+  {name:'Riau United',       div:1, color:'#ffd166', base:71},
+  {name:'Aceh',              div:1, color:'#8338ec', base:70},
+  {name:'Lampung',           div:1, color:'#fb5607', base:70},
+  {name:'NTB',               div:1, color:'#3a86ff', base:69},
+  {name:'Kalimantan Barat',  div:1, color:'#ffbe0b', base:69},
+  {name:'Sulawesi Utara',    div:1, color:'#a3b18a', base:68},
+  {name:'Maluku United',     div:1, color:'#bc6c25', base:68},
+  {name:'NTT',               div:1, color:'#606c38', base:67},
+  {name:'Bengkulu',          div:1, color:'#dda15e', base:66},
+  // DIVISI 2 (20 tim)
+  {name:'Jakarta City',      div:2, color:'#7209b7', base:64},
+  {name:'Surabaya United',   div:2, color:'#f72585', base:64},
+  {name:'Bandung',           div:2, color:'#4cc9f0', base:63},
+  {name:'Medan City',        div:2, color:'#4361ee', base:63},
+  {name:'Semarang',          div:2, color:'#3a0ca3', base:62},
+  {name:'Makassar United',   div:2, color:'#e63946', base:62},
+  {name:'Palembang',         div:2, color:'#2a9d8f', base:61},
+  {name:'Denpasar',          div:2, color:'#e9c46a', base:61},
+  {name:'Padang',            div:2, color:'#457b9d', base:60},
+  {name:'Pekanbaru',         div:2, color:'#5e60ce', base:60},
+  {name:'Banjarmasin',       div:2, color:'#8ac926', base:59},
+  {name:'Pontianak',         div:2, color:'#ff6b6b', base:59},
+  {name:'Manado',            div:2, color:'#06d6a0', base:58},
+  {name:'Ambon',             div:2, color:'#118ab2', base:58},
+  {name:'Jayapura',          div:2, color:'#ef476f', base:57},
+  {name:'Kupang',            div:2, color:'#ffd166', base:57},
+  {name:'Mataram',           div:2, color:'#8338ec', base:56},
+  {name:'Batam',             div:2, color:'#fb5607', base:56},
+  {name:'Yogyakarta',        div:2, color:'#3a86ff', base:55},
+  {name:'Solo',              div:2, color:'#ffbe0b', base:54}
+];
+
+/* ==================== STATE GLOBAL ==================== */
+let PID=0;
+let pendingMatch=null;
+const state={
+  view:'select',
+  season:1,
+  teams:[],
+  fixtures:{1:[],2:[]},
+  round:0,
+  myIdx:null,
+  myDiv:1,
+  tab:'squad',
+  selectedStarter:null,
+  tableDiv:1,
+  lastPR:null,
+  animSpeed:1,
+  dev:false,
+  history:[],
+  allTime:{scorers:{},assisters:{},mvp:{},cs:{},apps:{},cards:{}},
+  trophyRoom:[],
+  currentPialaNasWinner:null,
+  currentPialaNusWinner:null,
+  currentLCWinner:null,
+  pialaNasional:null,
+  pialaNusantara:null,
+  ligaChampions:null,
+  lastWeather:null,
+  theme:'dark',
+  sound:true,
+  activeSlot:null,
+  news:[],
+  training:[],
+  morale:0,
+  fanMood:50,
+  lastAttendance:null,
+  sponsors:[],
+  sponsorOffers:[],
+  sponsorOffersWeek:-1,
+  managerName:'',
+  managerNationality:'Indonesia',
+  managerReputation:50,
+  ipoFlow:null,
+  acquisitions:[],
+  stockHistory:[],
+  lastDividendSeason:0,
+  pcAnswered:false,
+  selectedTalk:'motivasi'
+};
+
+/* ===== AKHIR BAGIAN 1 ===== */
+
+// [BAGIAN 2 DISISIPKAN DI SINI]
+/* ==================== SISTEM POSISI & KEAHLIAN ==================== */
+function rollPositions(primaryPos){
+  if(primaryPos==='GK') return ['GK'];
+  const positions=[primaryPos];
+  if(Math.random()<0.60){
+    const pool=POSITION_COMPAT[primaryPos].secondaries.filter(p=>p!==primaryPos);
+    if(pool.length){
+      positions.push(pick(pool));
+      if(Math.random()<0.25){
+        const pool2=['DEF','MID','FWD'].filter(p=>!positions.includes(p));
+        if(pool2.length) positions.push(pick(pool2));
+      }
+    }
+  }
+  return positions;
+}
+function rollSkills(positions){
+  const skills=[];
+  const seen=new Set();
+  const mainPool=SKILL_POOL[positions[0]]||[];
+  const mainCount=ri(2,3);
+  for(let i=0;i<mainCount;i++){
+    const s=pick(mainPool);
+    if(!seen.has(s)){ skills.push({name:s, source:positions[0]}); seen.add(s); }
+  }
+  for(let i=1;i<positions.length;i++){
+    const pool=SKILL_POOL[positions[i]]||[];
+    const s=pick(pool);
+    if(!seen.has(s)){ skills.push({name:s, source:positions[i]}); seen.add(s); }
+  }
+  return skills;
+}
+function rollSpecialSkill(tier){
+  if(tier==='golden'){
+    const s=pick(SPECIAL_SKILLS.golden);
+    return {...s, tier:'golden'};
+  }
+  if(tier==='elite' && Math.random()<0.5){
+    const s=pick(SPECIAL_SKILLS.elite);
+    return {...s, tier:'elite'};
+  }
+  return null;
+}
+function hasSpecial(p, id){
+  return p && p.specialSkill && p.specialSkill.id===id;
+}
+
+/* ==================== GENERATOR PEMAIN ==================== */
+function makeSquad(base){
+  const comp={GK:2,DEF:5,MID:5,FWD:4};
+  const out=[];
+  for(const pos of ['GK','DEF','MID','FWD']){
+    for(let i=0;i<comp[pos];i++){
+      const positions=rollPositions(pos);
+      const skills=rollSkills(positions);
+      out.push({
+        id:PID++,
+        name:generateIndonesianName(),
+        pos,
+        positions,
+        skills,
+        specialSkill:null,
+        age:ri(18,34),
+        rating:Math.max(45,Math.min(95,Math.round(base+rnd(-6,6)))),
+        seasonGoals:0, careerGoals:0, apps:0,
+        assists:0, yellow:0, red:0, cs:0, mvp:0,
+        stamina:100, injury:0, injuryType:'',
+        ratings:[], avgRating:0,
+        talent:1.0, tier:'normal',
+        potential:Math.max(70,Math.min(95,base+ri(3,15))),
+        goalBonus:ri(3,15)*1e6,
+        assistBonus:ri(2,10)*1e6,
+        csBonus:ri(5,20)*1e6,
+        mvpBonus:ri(10,50)*1e6,
+        lastSeasonBonus:0,
+        contractYears:ri(1,5),
+        weeklyWage:Math.round((base+rnd(-6,6)-40)*1.5e6)
+      });
+    }
+  }
+  return out;
+}
+function makeYouth(baseR, fromPlayer=null){
+  const pos = fromPlayer ? fromPlayer.pos : pick(['GK','DEF','DEF','MID','MID','FWD','FWD']);
+  const name = fromPlayer ? fromPlayer.name : generateIndonesianName();
+
+  const roll = Math.random();
+  let talent, tier;
+  if(roll < 0.03){        talent = 2.0; tier = 'golden'; }
+  else if(roll < 0.15){   talent = 1.5; tier = 'elite'; }
+  else if(roll < 0.40){   talent = 1.2; tier = 'talented'; }
+  else {                  talent = 1.0; tier = 'normal'; }
+
+  const potBase = baseR + (tier==='golden'?25 : tier==='elite'?18 : tier==='talented'?12 : 6);
+  const potential = Math.max(60, Math.min(96, Math.round(potBase + rnd(-3,3))));
+  const startBoost = tier==='golden'?8 : tier==='elite'?5 : tier==='talented'?2 : 0;
+
+  const positions = rollPositions(pos);
+  const skills = rollSkills(positions);
+  const specialSkill = rollSpecialSkill(tier);
+
+  return {
+    id: PID++,
+    name, pos, positions, skills, specialSkill,
+    age: fromPlayer ? 16 : ri(13,16),
+    rating: Math.max(42, Math.min(72, Math.round(baseR*0.65 + rnd(-6,8) + startBoost))),
+    talent, tier, potential,
+    seasonGoals:0, careerGoals:0, apps:0,
+    assists:0, yellow:0, red:0, cs:0, mvp:0,
+    stamina:100, injury:0, injuryType:'',
+    ratings:[], avgRating:0,
+    goalBonus:ri(2,8)*1e6, assistBonus:ri(1,5)*1e6,
+    csBonus:ri(3,10)*1e6, mvpBonus:ri(5,25)*1e6,
+    lastSeasonBonus:0,
+    contractYears:ri(2,5),
+    weeklyWage:Math.round((baseR*0.5-20)*1e6)
+  };
+}
+function autoPickXI(team,formation){
+  const need=FORMATIONS[formation];
+  const xi=[];
+  for(const pos of ['GK','DEF','MID','FWD']){
+    const c=team.players.filter(p=>p.pos===pos && !p.injury)
+      .sort((a,b)=>b.rating-a.rating);
+    for(let i=0;i<need[pos];i++){
+      if(c[i]) xi.push(c[i].id);
+    }
+  }
+  team.xi=xi;
+}
+
+/* ==================== NEW GAME ==================== */
+function newGame(myIdx, slot){
+  PID=0;
+  state.activeSlot = slot || state.activeSlot || 1;
+  state.teams=TEAM_DEFS.map(d=>({
+    name:d.name, color:d.color, div:d.div,
+    players:makeSquad(d.base),
+    academy:[],
+    formation:pick(Object.keys(FORMATIONS)),
+    tactics:{mentality:pick(['seimbang','menyerang','defensif'])},
+    xi:[],
+    budget:(d.div===1 ? ri(120,220) : ri(40,90)) * 1e9,
+    stadium:{
+      level: d.div===1 ? 2 : 1,
+      cap: d.div===1 ? 18000 : 8000,
+      ticketPrice: d.div===1 ? 300000 : 100000,
+      tourPrice: 75000,
+      storeAvg: 150000,
+      hotelRate: 750000,
+      hotelRooms: d.div===1 ? 30 : 15,
+      revenueHistory: []
+    },
+    listed:false,
+    shares:null,
+    acquiredBy:null,
+    acquiredStake:0
+  }));
+  state.teams.forEach(t=>autoPickXI(t,t.formation));
+
+  // Akademi awal
+  state.teams.forEach(t=>{
+    const baseR = avg(t.players.map(p=>p.rating));
+    for(let i=0;i<5;i++) t.academy.push(makeYouth(baseR));
+  });
+
+  state.myIdx=myIdx;
+  const my=state.teams[myIdx];
+  state.myDiv=my.div;
+  autoPickXI(my,my.formation);
+
+  state.fixtures={1:makeFixtures(getDivIndices(1)), 2:makeFixtures(getDivIndices(2))};
+  state.round=0; state.season=1;
+  state.history=[];
+  state.allTime={scorers:{},assisters:{},mvp:{},cs:{},apps:{},cards:{}};
+  state.trophyRoom=[];
+  state.currentPialaNasWinner=null;
+  state.currentPialaNusWinner=null;
+  state.currentLCWinner=null;
+  state.pialaNasional=null;
+  state.pialaNusantara=null;
+  state.ligaChampions=null;
+  state.news=[];
+  state.training=[];
+  state.morale=0;
+  state.fanMood=50;
+  state.lastAttendance=null;
+  state.sponsors=[];
+  state.sponsorOffers=[];
+  state.sponsorOffersWeek=-1;
+  state.ipoFlow=null;
+  state.acquisitions=[];
+  state.stockHistory=[];
+  state.pcAnswered=false;
+
+  state.view='main'; state.tab='squad'; state.tableDiv=my.div;
+  render();
+}
+function getDivIndices(div){
+  return state.teams.map((t,i)=>t.div===div?i:-1).filter(i=>i>=0);
+}
+function makeFixtures(teamIndices){
+  let ids=[...teamIndices];
+  const n=ids.length;
+  const rounds=[];
+  for(let r=0;r<n-1;r++){
+    const pairs=[];
+    for(let i=0;i<n/2;i++) pairs.push([ids[i],ids[n-1-i]]);
+    rounds.push(pairs);
+    const fixed=ids[0], rest=ids.slice(1);
+    rest.unshift(rest.pop());
+    ids=[fixed,...rest];
+  }
+  return rounds.map(rd=>rd.map(([h,a])=>({home:h,away:a,played:false,hg:0,ag:0})));
+}
+function randomizeAIFormations(){
+  const forms=Object.keys(FORMATIONS);
+  state.teams.forEach((t,i)=>{
+    if(i===state.myIdx) return;
+    if(Math.random()<0.5){
+      t.formation=pick(forms);
+      autoPickXI(t,t.formation);
+    }
+    t.tactics.mentality=pick(['seimbang','menyerang','defensif']);
+  });
+}
+
+/* ==================== HELPERS ==================== */
+const getP=(team,id)=>team.players.find(p=>p.id===id);
+function teamStats(team){
+  const xi=team.xi.map(id=>getP(team,id)).filter(Boolean);
+  const by={GK:[],DEF:[],MID:[],FWD:[]};
+  xi.forEach(p=>by[p.pos].push(p.rating));
+  const gk=avg(by.GK),def=avg(by.DEF),mid=avg(by.MID),fwd=avg(by.FWD);
+  let atk=fwd*.55+mid*.30+def*.15;
+  let dfn=gk*.35+def*.45+mid*.20;
+  const m=team.tactics.mentality;
+  if(m==='menyerang'){atk*=1.10;dfn*=0.92;}
+  else if(m==='defensif'){atk*=0.90;dfn*=1.10;}
+  return {atk,def:dfn,mid};
+}
+function pickScorer(team){
+  const xi=team.xi.map(id=>getP(team,id)).filter(Boolean);
+  if(!xi.length) return null;
+  const w={GK:0,DEF:1,MID:3.5,FWD:6};
+  const tot=xi.reduce((s,p)=>s+w[p.pos],0);
+  let r=Math.random()*tot;
+  for(const p of xi){ r-=w[p.pos]; if(r<=0) return p; }
+  return xi[xi.length-1];
+}
+function pickAssist(team, scorerId){
+  const xi=team.xi.map(id=>getP(team,id)).filter(p=>p&&p.id!==scorerId);
+  if(!xi.length) return null;
+  const w={GK:0,DEF:1,MID:5,FWD:4};
+  const tot=xi.reduce((s,p)=>s+w[p.pos],0);
+  let r=Math.random()*tot;
+  for(const p of xi){ r-=w[p.pos]; if(r<=0) return p; }
+  return xi[0];
+}
+function pickMVP(team){
+  const xi=team.xi.map(id=>getP(team,id)).filter(Boolean);
+  if(!xi.length) return null;
+  const w=xi.map(p=>Math.pow(p.rating,2));
+  const tot=w.reduce((a,b)=>a+b,0);
+  let r=Math.random()*tot;
+  for(let i=0;i<xi.length;i++){ r-=w[i]; if(r<=0) return xi[i]; }
+  return xi[xi.length-1];
+}
+function checkXI(team){
+  const need=FORMATIONS[team.formation];
+  const c={GK:0,DEF:0,MID:0,FWD:0};
+  team.xi.forEach(id=>{const p=getP(team,id); if(p)c[p.pos]++;});
+  return c.GK===need.GK&&c.DEF===need.DEF&&c.MID===need.MID&&c.FWD===need.FWD;
+}
+function marketValue(p){
+  const ageF=p.age<=23?1.4:p.age<=27?1.2:p.age<=30?0.9:p.age<=33?0.5:0.25;
+  return Math.max(3, Math.round((p.rating-40)*(p.rating-40)/30*ageF)) * 1e9;
+}
+function weeklyWage(p){
+  return Math.round((p.rating-40) * 1.5e6);
+}
+
+/* ==================== KOMENTATOR ==================== */
+function rp(team, positions){
+  const pool=team.xi.map(id=>getP(team,id)).filter(p=>p&&positions.includes(p.pos));
+  if(!pool.length){
+    const all=team.xi.map(id=>getP(team,id)).filter(Boolean);
+    return all.length?pick(all):null;
+  }
+  return pick(pool);
+}
+const KOMENTAR={
+  buildup:[
+    "{p} menguasai bola di lini tengah...",
+    "Umpan panjang dari {p} mencari rekannya...",
+    "{p} menggiring bola melewati pemain lawan...",
+    "Operan cepat {p} ke sektor kanan...",
+    "Bola dikuasai {p} di area pertahanan {t}...",
+    "{p} mengatur tempo permainan dari belakang...",
+    "Sentuhan pertama {p} sangat baik...",
+    "Visi luar biasa {p}, umpan terobosan!",
+    "{p} menusuk dari sisi kiri!",
+    "{p} mencoba melewati bek dengan skill individunya...",
+    "{p} melepaskan umpan silang ke kotak penalti...",
+    "Kombinasi apik antara {p} dan rekan setimnya..."
+  ],
+  shot:[
+    "{p} melepaskan tembakan keras... masih di atas mistar!",
+    "Sepakan {p} menyamping dari gawang!",
+    "Tendangan {p} membentur tiang gawang! Sungguh sial!",
+    "Percobaan {p} dari luar kotak penalti... melambung!",
+    "{p} mencoba peruntungan... masih melebar!",
+    "Tendangan voli {p} melenceng jauh!",
+    "{p} menembak, namun masih diblok bek!",
+    "Sepakan sudut {p} tipis di samping gawang!",
+    "Peluang emas untuk {p}, tapi belum jadi gol!"
+  ],
+  save:[
+    "Penyelamatan gemilang dari {p}!",
+    "{p} dengan sigap menepis bola!",
+    "Kiper {p} menangkap bola dengan aman.",
+    "Refleks cepat {p} menghalau tembakan keras!",
+    "{p} menepis bola keluar lapangan!",
+    "Aksi luar biasa dari {p} di bawah mistar!",
+    "Tangan {p} terlalu kuat untuk tembakan itu!",
+    "Kiper {p} menggagalkan peluang emas lawan!"
+  ],
+  corner:[
+    "Tendangan sudut untuk {t}, {p} yang akan mengambil...",
+    "Corner kick {t}, bola diambil {p}...",
+    "{p} bersiap mengeksekusi tendangan sudut...",
+    "Sepak pojok {t}, {p} mengirim umpan ke tiang jauh..."
+  ],
+  foul:[
+    "Pelanggaran oleh {p} dari {t}...",
+    "{p} melanggar lawan di tengah lapangan...",
+    "Wasit meniup peluit, {p} melakukan pelanggaran...",
+    "{p} dianggap melanggar, tendangan bebas untuk lawan..."
+  ],
+  atmosfer:[
+    "Suasana stadion memanas...",
+    "Suporter {t} terus menyanyikan dukungan!",
+    "Tekanan dari {t} mulai terasa...",
+    "Pertandingan berlangsung seru!",
+    "Ribuan pasang mata menyaksikan laga ini...",
+    "Kedua tim saling jual beli serangan!",
+    "Pertahanan {t} tampak mulai goyah...",
+    "Wasit memberi isyarat tambahan waktu..."
+  ]
+};
+function komentarBaris(team, kategori){
+  const line=pick(KOMENTAR[kategori]);
+  let p=null;
+  if(kategori==='save') p=rp(team,['GK']);
+  else if(kategori==='corner') p=rp(team,['MID','FWD','DEF']);
+  else p=rp(team,['MID','DEF','FWD']);
+  return line
+    .replace('{p}', p?p.name:'pemain')
+    .replace('{t}', team.name);
+}
+
+/* ==================== SIMULASI MATCH ==================== */
+function simulateSegment(home, away, fromMin, toMin, ctx){
+  const wMod = ctx.weather ? ctx.weather.goal : 1.0;
+  const H=ctx.H, A=ctx.A, possH=ctx.possH;
+
+  for(let min=fromMin; min<=toMin; min++){
+    if(Math.random()<0.22){
+      const isHome=Math.random()<possH;
+      const t=isHome?home:away;
+      const kat=pick(['buildup','buildup','buildup','atmosfer','atmosfer','corner','foul']);
+      ctx.events.push({min,type:'commentary',text:komentarBaris(t,kat)});
+    }
+
+    if(Math.random()<0.50){
+      const isHome=Math.random()<possH;
+      const hb=ctx.homeBoost||0, ab=ctx.awayBoost||0;
+      const atkMul=(isHome?1.06:1)*(1+(isHome?hb:ab));
+      const defMul=(isHome?1:1.06)*(1+(isHome?ab:hb)*0.7);
+      const atk=(isHome?H.atk:A.atk)*atkMul;
+      const dfn=(isHome?A.def:H.def)*defMul;
+      let pGoal=0.115*(atk/(atk+dfn))*2*wMod;
+
+      const att2=isHome?home:away;
+      att2.xi.forEach(id=>{
+        const pl=getP(att2,id);
+        if(!pl) return;
+        if(hasSpecial(pl,'finisher')) pGoal*=1.15;
+        if(hasSpecial(pl,'speed') && Math.random()<0.5) pGoal*=1.08;
+        if(hasSpecial(pl,'leader')) pGoal*=1.02;
+      });
+
+      const att=isHome?home:away, def=isHome?away:home;
+
+      if(Math.random()<pGoal){
+        const s=pickScorer(att);
+        if(!s) continue;
+        if(isHome)ctx.hg++; else ctx.ag++;
+        let assistTxt='', assistId=null;
+        const maestroOn=att.xi.some(id=>hasSpecial(getP(att,id),'maestro'));
+        const assistChance=maestroOn?0.90:0.75;
+        if(Math.random()<assistChance){
+          const a=pickAssist(att, s.id);
+          if(a){ a.assists++; assistId=a.id; assistTxt=` (assist: ${a.name})`; }
+        }
+        ctx.events.push({
+          min, type:'goal', team:isHome?'home':'away',
+          scorerId:s.id, assistId,
+          text:`⚽ GOL! ${s.name} (${att.name})${assistTxt} — ${ctx.hg}-${ctx.ag}`
+        });
+      } else {
+        const s=pickScorer(att);
+        if(Math.random()<0.45){
+          ctx.events.push({min,type:'commentary',text:komentarBaris(def,'save')});
+        } else {
+          ctx.events.push({min,type:'commentary',
+            text:pick(KOMENTAR.shot).replace('{p}', s?s.name:'penyerang')});
+        }
+      }
+    }
+
+    if(Math.random()<0.010){
+      const isHome=Math.random()<0.5;
+      const t=isHome?home:away;
+      const p=pick(t.xi.map(id=>getP(t,id)).filter(Boolean));
+      if(p){
+        const isRed=Math.random()<0.08;
+        if(isRed) p.red++;
+        else p.yellow++;
+        ctx.events.push({
+          min, type:'card', team:isHome?'home':'away', playerId:p.id, red:isRed,
+          text:isRed?`🟥 KARTU MERAH! ${p.name} (${t.name}) diusir wasit!`
+                     :`🟨 Kartu kuning untuk ${p.name} (${t.name}).`
+        });
+      }
+    }
+  }
+}
+function computeMatchRatings(team, gf, ga, events, mvp){
+  team.xi.forEach(id=>{
+    const p=getP(team,id);
+    if(!p) return;
+    let r=6.0;
+    events.forEach(e=>{
+      if(e.type==='goal' && e.scorerId===id) r+=1.5;
+      if(e.type==='goal' && e.assistId===id) r+=1.0;
+      if(e.type==='card' && e.playerId===id) r-= e.red?1.5:0.5;
+    });
+    if(p.pos==='GK' && ga===0) r+=1.5;
+    if(p.pos==='DEF' && ga===0) r+=0.8;
+    if(p.pos==='FWD' && gf>=3) r+=0.3;
+    if(mvp && mvp.id===id) r+=0.5;
+    if(hasSpecial(p,'clutch') && events.some(e=>e.min>45)) r+=0.5;
+    if(hasSpecial(p,'biggame') && (state.pialaNasional||state.ligaChampions)) r+=0.4;
+    r += rnd(-0.4,0.4);
+    r = Math.max(1,Math.min(10,r));
+    if(!p.ratings) p.ratings=[];
+    p.ratings.push(Math.round(r*10)/10);
+    if(p.ratings.length>60) p.ratings=p.ratings.slice(-60);
+    p.avgRating = p.ratings.reduce((a,b)=>a+b,0)/p.ratings.length;
+  });
+}
+function finalizeMatch(home, away, ctx){
+  const hGK=home.xi.map(id=>getP(home,id)).find(p=>p&&p.pos==='GK');
+  const aGK=away.xi.map(id=>getP(away,id)).find(p=>p&&p.pos==='GK');
+  if(ctx.ag===0 && hGK) hGK.cs++;
+  if(ctx.hg===0 && aGK) aGK.cs++;
+
+  let mvp=null;
+  if(ctx.hg>ctx.ag) mvp=pickMVP(home);
+  else if(ctx.ag>ctx.hg) mvp=pickMVP(away);
+  else mvp=pickMVP(Math.random()<0.5?home:away);
+  if(mvp) mvp.mvp++;
+
+  ctx.events.forEach(e=>{
+    if(e.type==='goal'){
+      const t=e.team==='home'?home:away;
+      const p=getP(t,e.scorerId);
+      if(p){p.seasonGoals++;p.careerGoals++;}
+    }
+  });
+
+  [home,away].forEach(t=>{
+    t.xi.forEach(id=>{
+      const p=getP(t,id);
+      if(!p) return;
+      p.apps++;
+      p.stamina=Math.max(0,p.stamina-STAMINA_COST+ri(-4,4));
+      let injChance=0.15;
+      if(hasSpecial(p,'ironman')) injChance*=0.5;
+      if(p.stamina<25 && Math.random()<injChance){
+        p.injury=ri(1,5);
+        p.injuryType=pick(INJURIES);
+        p.stamina=Math.min(p.stamina,40);
+      }
+    });
+  });
+
+  computeMatchRatings(home, ctx.hg, ctx.ag, ctx.events, ctx.hg>ctx.ag?mvp:null);
+  computeMatchRatings(away, ctx.ag, ctx.hg, ctx.events, ctx.ag>ctx.hg?mvp:null);
+}
+
+/* ==================== PLAY ROUND (FASE 1) ==================== */
+function playRound(){
+  // Pulihkan non-XI
+  state.teams.forEach(t=>{
+    t.players.forEach(p=>{
+      if(!t.xi.includes(p.id)) p.stamina=Math.min(100,p.stamina+STAMINA_RECOVER);
+      if(p.injury>0) p.injury=Math.max(0,p.injury-1);
+    });
+  });
+
+  // Press conference kadang muncul
+  if(!state.pcAnswered && Math.random()<0.35){
+    state.pcAnswered=true;
+    openPressConference();
+    return;
+  }
+
+  if(state.sound) sfxWhistle();
+
+  let mine=null;
+  [1,2].forEach(div=>{
+    const round=state.fixtures[div][state.round];
+    if(!round) return;
+    round.forEach(f=>{
+      const h=state.teams[f.home], a=state.teams[f.away];
+      const isUser = f.home===state.myIdx || f.away===state.myIdx;
+      const weather=rollWeather();
+
+      if(isUser){
+        const H=teamStats(h), A=teamStats(a);
+        const ctx={
+          H, A, possH:H.mid/(H.mid+A.mid),
+          hg:0, ag:0, events:[], weather,
+          homeBoost:0, awayBoost:0
+        };
+        simulateSegment(h, a, 1, 45, ctx);
+        state.lastWeather=weather;
+        mine={f,h,a,ctx,subsLeft:5,finished:false};
+      } else {
+        const H=teamStats(h), A=teamStats(a);
+        const ctx={H,A,possH:H.mid/(H.mid+A.mid),hg:0,ag:0,events:[],weather,homeBoost:0,awayBoost:0};
+        simulateSegment(h, a, 1, 90, ctx);
+        f.hg=ctx.hg; f.ag=ctx.ag; f.played=true;
+        finalizeMatch(h,a,ctx);
+      }
+    });
+  });
+
+  pendingMatch=mine;
+  if(mine){
+    state.view='match';
+    state.pcAnswered=false;
+    render();
+    animateHalf(1);
+  } else {
+    nextRound();
+  }
+}
+
+/* ===== AKHIR BAGIAN 2 ===== */
+
+// [BAGIAN 3 DISISIPKAN DI SINI]
+/* ==================== RENDER UTAMA ==================== */
+function render(){
+  const app=document.getElementById('app');
+  const sub=document.getElementById('hdr-sub');
+  if(state.view==='select'){
+    sub.textContent='Pilih klub untuk dikelola';
+    app.innerHTML=renderSelect();
+  } else {
+    const my=state.teams[state.myIdx];
+    const mgr=state.managerName?`<br><span style="color:#e9c46a;font-size:10px">👔 ${state.managerName}</span>`:'';
+    sub.innerHTML=`<b style="color:#a8e6c1">${my.name}</b> &middot; Div ${my.div} &middot; Musim ${state.season} &middot; Pekan ${Math.min(state.round+1,TOTAL_ROUNDS)}/${TOTAL_ROUNDS}${mgr}`;
+    if(state.view==='main') app.innerHTML=renderMain();
+    else if(state.view==='match') app.innerHTML=renderMatch();
+    else if(state.view==='seasonEnd') app.innerHTML=renderSeasonEnd();
+  }
+  if(state.dev) renderDevPanel();
+  if(state.view!=='select') scheduleSave();
+  const sb=document.getElementById('soundBtn');
+  if(sb) sb.textContent=state.sound?'🔊':'🔇';
+  const tb=document.getElementById('themeBtn');
+  if(tb) tb.textContent=state.theme==='dark'?'🌙':'☀️';
+}
+
+/* ==================== SELECT KLUB ==================== */
+function renderSelect(){
+  if(!state.managerName){
+    return `<div class="card" style="text-align:center;padding:30px">
+      <div style="font-size:48px">👔</div>
+      <h2>Selamat Datang, Calon Manajer</h2>
+      <p style="color:#8bb59f;font-size:13px;margin:14px 0;line-height:1.7">
+        Sebelum memulai karier, isi profil manajer Anda.
+      </p>
+      <button class="btn primary" onclick="openManagerNameModal()">📝 Isi Profil Manajer</button>
+    </div>`;
+  }
+  const byDiv={1:[],2:[]};
+  TEAM_DEFS.forEach((d,i)=>byDiv[d.div].push({d,i}));
+  const card=(x)=>`<div class="team-card" onclick="newGame(${x.i},state.activeSlot)">
+      <div class="bar" style="background:${x.d.color}"></div>
+      <div class="nm">${x.d.name}<span class="div-label div-${x.d.div}">D${x.d.div}</span></div>
+      <div class="mt">Rating ${x.d.base}</div>
+    </div>`;
+
+  const slots = SAVE_SLOTS.map(n=>{
+    const info=getSlotInfo(n);
+    const isActive=state.activeSlot===n;
+    return `<div style="background:#0f1a15;border:1px solid ${isActive?'#2ecc71':'#24382e'};border-radius:10px;padding:10px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <b style="color:#a8e6c1">Slot ${n}</b>
+        ${isActive?'<span style="color:#2ecc71;font-size:10px;font-weight:800">AKTIF</span>':''}
+      </div>
+      ${info?`<div style="font-size:11px;color:#8bb59f;line-height:1.7;margin-bottom:8px">
+        <b>${info.team}</b> · Div ${info.div}<br>
+        Musim ${info.season} · Pekan ${info.round+1}/${TOTAL_ROUNDS}
+        ${info.history>0?`<br>${info.history} musim selesai`:''}
+      </div>
+      <div class="row">
+        <button class="btn primary small" onclick="state.activeSlot=${n};continueGame(${n})">▶ Lanjutkan</button>
+        <button class="btn small" onclick="if(confirm('Hapus slot ${n}?')){deleteSaveSlot(${n});render();}">🗑️</button>
+      </div>`:
+      `<div style="font-size:11px;color:#7fae94;margin-bottom:8px">Slot kosong</div>
+      <div class="row">
+        <button class="btn small" onclick="state.activeSlot=${n};render();">${isActive?'✓ Dipilih':'Pilih Slot'}</button>
+      </div>`}
+    </div>`;
+  }).join('');
+
+  return `<div class="card">
+    <h2>💾 Slot Penyimpanan</h2>
+    ${slots}
+  </div>
+  <div class="card">
+    <h2>Atau Mulai Karier Baru</h2>
+    <p style="font-size:12px;color:#8bb59f;margin-bottom:12px">
+      <b style="color:#e9c46a">Promosi:</b> 3 teratas Div 2 naik ·
+      <b style="color:#e63946">Degradasi:</b> 3 terbawah Div 1 turun
+    </p>
+    <h3>🏆 Divisi 1 (Utama)</h3>
+    <div class="teams">${byDiv[1].map(card).join('')}</div>
+    <h3 style="margin-top:16px">🥈 Divisi 2</h3>
+    <div class="teams">${byDiv[2].map(card).join('')}</div>
+  </div>`;
+}
+
+/* ==================== MAIN VIEW ==================== */
+function renderMain(){
+  const my=state.teams[state.myIdx];
+  const nextF=state.fixtures[my.div][state.round]?.find(f=>f.home===state.myIdx||f.away===state.myIdx);
+  let nextInfo='';
+  if(nextF){
+    const isHome=nextF.home===state.myIdx;
+    const opp=state.teams[isHome?nextF.away:nextF.home];
+    nextInfo=`<div style="margin-top:8px;font-size:12px">
+      Berikutnya: <b style="color:${my.color}">${my.name}</b>
+      <span style="color:#7fae94"> vs </span>
+      <b style="color:${opp.color}">${opp.name}</b>
+      <span class="badge-round" style="margin-left:6px">${isHome?'KANDANG':'TANDANG'}</span>
+    </div>`;
+  }
+  const tabs=['squad','akademi','taktik','transfer','piala','sponsor','ipo','akuisisi','klasemen','statistik','legenda','riwayat','berita','stadion'];
+  const labels={squad:'👥 Skuad',akademi:'🏫 Akademi',taktik:'🎯 Taktik',transfer:'💰 Transfer',
+    piala:'🏆 Piala',sponsor:'🤝 Sponsor',ipo:'📈 IPO',akuisisi:'🏢 Akuisisi',
+    klasemen:'📊 Klasemen',statistik:'📈 Statistik',legenda:'🏛️ Legenda',
+    riwayat:'📚 Riwayat',berita:'📰 Berita',stadion:'🏟️ Stadion'};
+  const tabHTML=`<div class="tabs">
+    ${tabs.map(t=>`<div class="tab ${state.tab===t?'active':''}" onclick="setTab('${t}')">${labels[t]}</div>`).join('')}
+  </div>`;
+
+  let content='';
+  if(state.tab==='squad') content=renderSquad();
+  else if(state.tab==='akademi') content=renderAkademi();
+  else if(state.tab==='taktik') content=renderTaktik();
+  else if(state.tab==='transfer') content=renderTransfer();
+  else if(state.tab==='piala') content=renderPiala();
+  else if(state.tab==='sponsor') content=renderSponsor();
+  else if(state.tab==='ipo') content=renderIPO();
+  else if(state.tab==='akuisisi') content=renderAkuisisi();
+  else if(state.tab==='klasemen') content=renderTable();
+  else if(state.tab==='statistik') content=renderStats();
+  else if(state.tab==='legenda') content=renderLegenda();
+  else if(state.tab==='riwayat') content=renderHistory();
+  else if(state.tab==='berita') content=renderBerita();
+  else if(state.tab==='stadion') content=renderStadion();
+
+  return `<div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <h2 style="margin-bottom:2px">${my.name} <span class="div-label div-${my.div}">DIV ${my.div}</span></h2>
+        <div style="font-size:11px;color:#8bb59f">Formasi ${my.formation} &middot; ${MENTALITY[my.tactics.mentality].label} &middot; Budget ${formatIDR(my.budget)}</div>
+      </div>
+      <button class="btn primary" onclick="playRound()">▶ Mainkan</button>
+    </div>
+    ${nextInfo}
+  </div>
+  ${tabHTML}
+  ${content}`;
+}
+
+/* ==================== SQUAD ==================== */
+function renderSquad(){
+  const my=state.teams[state.myIdx];
+  const starters=my.xi.map(id=>getP(my,id)).filter(Boolean);
+  const bench=my.players.filter(p=>!my.xi.includes(p.id))
+    .sort((a,b)=>'GK DEF MID FWD'.indexOf(a.pos)-'GK DEF MID FWD'.indexOf(b.pos)||b.rating-a.rating);
+
+  const trainingSet=state.training||[];
+  const trainingHTML=`<h3>🎓 Latihan Terfokus (${trainingSet.length}/3)</h3>
+    <div style="font-size:11px;color:#8bb59f;margin-bottom:8px">
+      Pilih maks 3 pemain — dapat bonus +1 rating tiap pekan.
+    </div>
+    <div class="plist" style="margin-bottom:14px">
+      ${my.players.map(p=>{
+        const on=trainingSet.includes(p.id);
+        return `<div class="pcard ${on?'sel':''}" onclick="toggleTraining(${p.id})">
+          <span class="pos ${p.pos}">${p.pos}</span>
+          <span class="pname">${p.name}</span>
+          <span class="rate">${on?'✓':p.rating}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  const pc=(p,isStarter)=>{
+    const stam=p.stamina||100;
+    const cls=stam<30?'low':stam<60?'mid':'';
+    const inj=p.injury>0?`<span class="inj-badge">🚑 ${p.injury}p</span>`:'';
+    const avg=p.avgRating?`<span style="color:#e9c46a;font-size:10px">${p.avgRating.toFixed(1)}</span>`:'';
+    const posMini=(p.positions||[p.pos]).map(pp=>`<span class="pos-mini pos ${pp}">${pp}</span>`).join('');
+    const spec=p.specialSkill?`<span class="special-icon" onclick="event.stopPropagation();showPlayerDetail(${p.id})">${p.specialSkill.icon}</span>`:'';
+    return `<div class="pcard ${state.selectedStarter===p.id?'sel':''}"
+        onclick="${isStarter?`selectStarter(${p.id})`:`swapWith(${p.id})`};">
+        <span class="pos ${p.pos}">${p.pos}</span>
+        <span class="pname" onclick="event.stopPropagation();showPlayerDetail(${p.id})">${p.name}${inj}${spec}</span>
+        <span class="pmeta">${posMini} ${p.age}th · ${p.seasonGoals}⚽ ${avg}
+          <span class="stamina-bar"><span class="stamina-fill ${cls}" style="width:${stam}%"></span></span>
+        </span>
+        <span class="rate">${p.rating}</span>
+      </div>`;
+  };
+
+  return `<div class="card">
+    ${trainingHTML}
+    <h3>Starting XI (klik lalu pilih cadangan)</h3>
+    <div class="plist">${starters.map(p=>pc(p,true)).join('')}</div>
+    <h3>Cadangan</h3>
+    <div class="plist">${bench.map(p=>pc(p,false)).join('')}</div>
+  </div>`;
+}
+function showPlayerDetail(pid){
+  const my=state.teams[state.myIdx];
+  const p=getP(my,pid);
+  if(!p) return;
+  const spec=p.specialSkill?`<div style="background:#1a1408;padding:10px;border-radius:8px;margin-top:8px;border:1px solid #ffd700">
+    <div style="font-size:20px">${p.specialSkill.icon}</div>
+    <div style="color:#ffd700;font-weight:800;font-size:13px">${p.specialSkill.name}</div>
+    <div style="font-size:10px;color:#e9c46a">${p.specialSkill.desc}</div>
+  </div>`:'';
+  const skills=(p.skills||[]).map(s=>`<span style="display:inline-block;background:#182720;padding:3px 7px;border-radius:5px;font-size:10px;margin:2px;border:1px solid #2f5442">${s.name} <span style="color:#7fae94;font-size:8px">${s.source}</span></span>`).join('');
+  const tier=p.tier && p.tier!=='normal'?`<span style="color:${p.tier==='golden'?'#ffd700':p.tier==='elite'?'#a8e6c1':'#e9c46a'};font-weight:800;font-size:10px">${p.tier.toUpperCase()}</span>`:'';
+  const modal=document.createElement('div');
+  modal.id='createModal';
+  modal.innerHTML=`<div class="inner">
+    <h2>${p.name}</h2>
+    <div class="sub">${p.pos} · ${p.age} tahun · Rating ${p.rating} ${tier}</div>
+    <div style="background:#16241d;padding:10px;border-radius:8px;font-size:12px;line-height:1.8;color:#a8e6c1">
+      <b>Posisi:</b> ${(p.positions||[p.pos]).join(' · ')}<br>
+      <b>Potential:</b> ${p.potential||'-'}<br>
+      <b>Stamina:</b> ${p.stamina||100}%${p.injury>0?` · 🚑 ${p.injuryType} (${p.injury}p)`:''}<br>
+      <b>Musim ini:</b> ${p.seasonGoals}⚽ ${p.assists}🎯 ${p.mvp}⭐ ${p.cs}🧤<br>
+      <b>Kontrak:</b> ${p.contractYears||'-'} tahun · ${formatIDR(p.weeklyWage||0)}/pekan<br>
+      <b>Nilai pasar:</b> ${formatIDR(marketValue(p))}
+    </div>
+    ${spec}
+    <h3 style="margin-top:12px">Keahlian</h3>
+    <div>${skills||'<span class="empty">-</span>'}</div>
+    <h3 style="margin-top:12px">Bonus Performa</h3>
+    <div style="font-size:11px;color:#8bb59f;line-height:1.8">
+      ⚽ ${formatIDR(p.goalBonus||0)}/gol · 🎯 ${formatIDR(p.assistBonus||0)}/asis<br>
+      🧤 ${formatIDR(p.csBonus||0)}/CS · ⭐ ${formatIDR(p.mvpBonus||0)}/MVP
+      ${p.lastSeasonBonus?`<br><b style="color:#2ecc71">Bonus musim lalu: ${formatIDR(p.lastSeasonBonus)}</b>`:''}
+    </div>
+    <button class="btn primary" style="width:100%;margin-top:14px" onclick="this.closest('#createModal').remove()">Tutup</button>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+/* ==================== AKADEMI ==================== */
+function renderAkademi(){
+  const my=state.teams[state.myIdx];
+  const acad=[...my.academy].sort((a,b)=>b.rating-a.rating);
+  return `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:12px;color:#8bb59f">
+        ${acad.length} pemain muda &middot; Tim utama: <b>${my.players.length}/25</b>
+        &middot; Budget: <b style="color:#ffd700">${formatIDR(my.budget)}</b>
+      </div>
+      <button class="btn primary" onclick="openCreatePlayer()">✨ Ciptakan Pemain</button>
+    </div>
+    ${acad.length?`<div class="scroll-box"><table>
+      <tr><th>Nama</th><th>Pos</th><th class="num">Umur</th><th class="num">Rat</th><th class="num">Pot</th><th>Talenta</th><th class="num">Nilai</th><th></th></tr>
+      ${acad.map(p=>{
+        const badge =
+          p.tier==='golden'   ? '<span style="color:#ffd700;font-weight:800">🌟 GOLDEN</span>' :
+          p.tier==='elite'    ? '<span style="color:#a8e6c1;font-weight:700">⭐ ELITE</span>' :
+          p.tier==='talented' ? '<span style="color:#e9c46a">✦ Berbakat</span>' :
+                                '<span style="color:#7fae94">—</span>';
+        const potColor = (p.potential||0)>=88?'#ffd700':(p.potential||0)>=80?'#a8e6c1':'#8bb59f';
+        const spec=p.specialSkill?` <span style="cursor:pointer" onclick="showPlayerDetail(${p.id})">${p.specialSkill.icon}</span>`:'';
+        return `<tr class="${p.tier==='golden'?'mine':''}">
+          <td>${p.name}${spec}</td>
+          <td><span class="pos-mini pos ${p.pos}">${p.pos}</span></td>
+          <td class="num">${p.age}</td>
+          <td class="num">${p.rating}</td>
+          <td class="num" style="color:${potColor};font-weight:700">${p.potential||'-'}</td>
+          <td style="font-size:10px">${badge}</td>
+          <td class="num">${formatIDR(marketValue(p))}</td>
+          <td style="white-space:nowrap">
+            ${p.age>=15?`<button class="btn small" onclick="promoteYouth(${p.id})">⬆️</button>`:'<span style="font-size:9px;color:#7fae94">&lt;15</span>'}
+            <button class="btn small" onclick="releaseYouth(${p.id})">✖</button>
+          </td>
+        </tr>`;
+      }).join('')}
+    </table></div>`:'<div class="empty">Akademi kosong.</div>'}
+    <p style="font-size:10px;color:#7fae94;margin-top:10px;line-height:1.7">
+      • Pemain akademi berkembang lebih cepat.<br>
+      • Promosi ke tim utama minimal usia <b>15 tahun</b>.<br>
+      • Otomatis keluar di usia <b>19 tahun</b> jika tidak dipromosikan.<br>
+      • Pensiun di usia <b>45</b> → recycle jadi pemain akademi 16 tahun.
+    </p>
+  </div>`;
+}
+
+/* ==================== TAKTIK ==================== */
+function renderTaktik(){
+  const my=state.teams[state.myIdx];
+  return `<div class="card">
+    <h2>Formasi</h2>
+    <div class="row">
+      ${Object.keys(FORMATIONS).map(f=>
+        `<button class="btn ${my.formation===f?'primary':''}" onclick="setFormation('${f}')">${f}</button>`
+      ).join('')}
+    </div>
+    <h2 style="margin-top:16px">Mentalitas</h2>
+    <div class="row">
+      ${Object.entries(MENTALITY).map(([k,v])=>
+        `<button class="btn ${my.tactics.mentality===k?'primary':''}" onclick="setMentality('${k}')">${v.label}</button>`
+      ).join('')}
+    </div>
+  </div>`;
+}
+
+/* ==================== KLASEMEN ==================== */
+function getTable(div){
+  const idxs=getDivIndices(div);
+  const t=idxs.map(i=>({team:state.teams[i], idx:i, P:0,W:0,D:0,L:0,GF:0,GA:0,Pts:0,form:[]}));
+  const map={}; t.forEach(r=>map[r.idx]=r);
+  state.fixtures[div].flat().forEach(f=>{
+    if(!f.played)return;
+    const h=map[f.home],a=map[f.away];
+    if(!h||!a)return;
+    h.P++;a.P++;h.GF+=f.hg;h.GA+=f.ag;a.GF+=f.ag;a.GA+=f.hg;
+    if(f.hg>f.ag){h.W++;a.L++;h.Pts+=3;h.form.push('W');a.form.push('L');}
+    else if(f.hg<f.ag){a.W++;h.L++;a.Pts+=3;a.form.push('W');h.form.push('L');}
+    else{h.D++;a.D++;h.Pts++;a.Pts++;h.form.push('D');a.form.push('D');}
+  });
+  t.sort((x,y)=>y.Pts-x.Pts||(y.GF-y.GA)-(x.GF-x.GA)||y.GF-x.GF);
+  return t;
+}
+function renderTable(){
+  const div=state.tableDiv;
+  const t=getTable(div);
+  const divToggle=`<div class="div-toggle">
+    <div class="tab ${div===1?'active':''}" onclick="setTableDiv(1)">🏆 Divisi 1</div>
+    <div class="tab ${div===2?'active':''}" onclick="setTableDiv(2)">🥈 Divisi 2</div>
+  </div>`;
+  return `<div class="card">
+    <h2>Klasemen Divisi ${div}</h2>
+    ${divToggle}
+    <div class="scroll-box">
+    <table>
+      <tr><th>#</th><th>Klub</th><th class="num">M</th><th class="num">W</th><th class="num">D</th>
+      <th class="num">L</th><th class="num">SG</th><th class="num">Pts</th><th>Form</th></tr>
+      ${t.map((r,i)=>{
+        const isMine=r.idx===state.myIdx;
+        const isRel=div===1&&i>=t.length-RELEGATED;
+        const isPro=div===2&&i<PROMOTED;
+        const cls=[isMine?'mine':'',isRel?'rel':'',isPro?'pro':''].filter(Boolean).join(' ');
+        const form=(r.form||[]).slice(-5).map(f=>{
+          const c=f==='W'?'#2ecc71':f==='D'?'#e9c46a':'#e63946';
+          return `<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${c};color:#04160c;font-size:8px;font-weight:800;text-align:center;line-height:12px;margin-right:2px">${f}</span>`;
+        }).join('');
+        const badge=r.team.acquiredBy===state.myIdx?'<span style="color:#ffd700;font-size:10px;font-weight:800">👑</span>':'';
+        return `<tr class="${cls}">
+          <td>${i+1}</td>
+          <td><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${r.team.color};margin-right:5px"></span>${r.team.name} ${badge}</td>
+          <td class="num">${r.P}</td><td class="num">${r.W}</td><td class="num">${r.D}</td>
+          <td class="num">${r.L}</td>
+          <td class="num">${r.GF-r.GA>0?'+':''}${r.GF-r.GA}</td>
+          <td class="num" style="font-weight:800;color:#a8e6c1">${r.Pts}</td>
+          <td style="white-space:nowrap">${form}</td>
+        </tr>`;
+      }).join('')}
+    </table>
+    </div>
+    <div style="font-size:10px;color:#7fae94;margin-top:8px">
+      🟢 Hijau = zona promosi (Div 2) · 🔴 Merah = zona degradasi (Div 1)
+    </div>
+  </div>`;
+}
+
+/* ==================== STATISTIK ==================== */
+function topScorers(){
+  const all=[];
+  state.teams.forEach(t=>t.players.forEach(p=>{if(p.seasonGoals>0)all.push({p,t});}));
+  all.sort((a,b)=>b.p.seasonGoals-a.p.seasonGoals);
+  return all.slice(0,10);
+}
+function topAssisters(){
+  const all=[];
+  state.teams.forEach(t=>t.players.forEach(p=>{if(p.assists>0)all.push({p,t});}));
+  all.sort((a,b)=>b.p.assists-a.p.assists);
+  return all.slice(0,10);
+}
+function getCards(){
+  const all=[];
+  state.teams.forEach(t=>t.players.forEach(p=>{if(p.yellow>0||p.red>0)all.push({p,t});}));
+  all.sort((a,b)=>(b.p.red*10+b.p.yellow)-(a.p.red*10+a.p.yellow));
+  return all.slice(0,10);
+}
+function getCleanSheets(){
+  const all=[];
+  state.teams.forEach(t=>t.players.forEach(p=>{if(p.pos==='GK'&&p.cs>0)all.push({p,t});}));
+  all.sort((a,b)=>b.p.cs-a.p.cs);
+  return all.slice(0,10);
+}
+function getMVP(){
+  const all=[];
+  state.teams.forEach(t=>t.players.forEach(p=>{if(p.mvp>0)all.push({p,t});}));
+  all.sort((a,b)=>b.p.mvp-a.p.mvp);
+  return all.slice(0,10);
+}
+function renderStats(){
+  const sections=[
+    {title:'⚽ Top Skor',list:topScorers(),unit:'Gol',getVal:x=>x.p.seasonGoals,color:'#2ecc71'},
+    {title:'🎯 Top Asis',list:topAssisters(),unit:'Asis',getVal:x=>x.p.assists,color:'#457b9d'},
+    {title:'🟨🟥 Kartu Terbanyak',list:getCards(),unit:'Kartu',getVal:x=>`${x.p.yellow}🟨 ${x.p.red}🟥`,color:'#e9c46a'},
+    {title:'🧤 Clean Sheet (Kiper)',list:getCleanSheets(),unit:'CS',getVal:x=>x.p.cs,color:'#5e60ce'},
+    {title:'⭐ Pemain Terbaik (MVP)',list:getMVP(),unit:'MVP',getVal:x=>x.p.mvp,color:'#ffd700'}
+  ];
+  return `<div class="card">
+    <h2>📈 Statistik Musim ${state.season}</h2>
+    ${sections.map(s=>`
+      <h3>${s.title}</h3>
+      ${s.list.length?`<table>
+        <tr><th>#</th><th>Pemain</th><th>Klub</th><th class="num">${s.unit}</th></tr>
+        ${s.list.map((x,i)=>`<tr class="${x.t===state.teams[state.myIdx]?'mine':''}">
+          <td>${i+1}</td>
+          <td>${x.p.name} <span class="pos-mini pos ${x.p.pos}">${x.p.pos}</span></td>
+          <td style="font-size:10px">${x.t.name}</td>
+          <td class="num" style="font-weight:800;color:${s.color}">${s.getVal(x)}</td>
+        </tr>`).join('')}
+      </table>`:'<div class="empty">Belum ada data.</div>'}
+    `).join('')}
+  </div>`;
+}
+
+/* ==================== RIWAYAT ==================== */
+function renderHistory(){
+  const h=state.history||[];
+  const trophies=state.trophyRoom||[];
+  const trophyHTML = trophies.length ? `<div class="card" style="background:linear-gradient(100deg,#2a2410,#1a1608);border-color:#ffd700">
+    <h2 style="color:#ffd700">🏆 Ruang Trofi — ${trophies.length} Gelar</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:8px">
+      ${trophies.map(t=>`<div style="background:#16241d;padding:10px;border-radius:10px;text-align:center;border:1px solid #ffd700">
+        <div style="font-size:28px">🏆</div>
+        <div style="font-size:10px;color:#e9c46a;font-weight:700;margin-top:4px">${t.type}</div>
+        <div style="font-size:9px;color:#7fae94">Musim ${t.season}</div>
+      </div>`).join('')}
+    </div>
+  </div>` : '';
+
+  if(!h.length) return trophyHTML+`<div class="card">
+    <h2>📚 Riwayat Karier</h2>
+    <div class="empty">Belum ada musim terselesaikan.</div>
+  </div>`;
+
+  return trophyHTML + `<div class="card">
+    <h2>📚 Riwayat Karier — ${h.length} Musim</h2>
+    <div class="scroll-box" style="max-height:500px">
+      ${h.slice().reverse().map(s=>{
+        const isChamp=s.myPos===1;
+        return `<div style="background:#16241d;border:1px solid #24382e;border-radius:10px;
+          padding:10px;margin-bottom:8px;${isChamp?'border-color:#ffd700':''}">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <b style="color:#a8e6c1">Musim ${s.season}</b>
+            <span style="font-size:11px;color:#8bb59f">${s.myTeam} · Div ${s.myDiv}</span>
+          </div>
+          <div style="font-size:11px;color:#8bb59f;margin-bottom:6px">
+            Posisi: <b style="color:${isChamp?'#ffd700':s.myPos<=3?'#2ecc71':'#e8f0ec'}">#${s.myPos}</b> (${s.myPts} poin)
+          </div>
+          <div style="font-size:10px;color:#7fae94;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+            <div>🏆 D1: <b>${s.div1Champ.name}</b></div>
+            <div>🥈 D2: <b>${s.div2Champ.name}</b></div>
+            ${s.pialaNasWinner?`<div>🏅 Piala Nas: <b>${s.pialaNasWinner.name}</b></div>`:''}
+            ${s.pialaNusWinner?`<div>🌏 Piala Nus: <b>${s.pialaNusWinner.name}</b></div>`:''}
+            ${s.ligaChampWinner?`<div>🌏 LCA: <b>${s.ligaChampWinner.name}</b></div>`:''}
+            ${s.awardMVP?`<div>🥇 MVP: <b>${s.awardMVP.name}</b></div>`:''}
+            ${s.awardTopScorer?`<div>⚽ Top: <b>${s.awardTopScorer.name}</b> (${s.awardTopScorer.val})</div>`:''}
+            ${s.awardGoldenBoy?`<div>🌟 GB: <b>${s.awardGoldenBoy.name}</b></div>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+/* ==================== LEGENDA ==================== */
+function addAllTime(cat, name, val, teamName){
+  if(!name || !val) return;
+  const d=state.allTime[cat];
+  if(!d[name]) d[name]={name, val:0, teams:[]};
+  d[name].val += val;
+  if(teamName && !d[name].teams.includes(teamName)) d[name].teams.push(teamName);
+}
+function accumulateSeason(){
+  if(!state.allTime) state.allTime={scorers:{},assisters:{},mvp:{},cs:{},apps:{},cards:{}};
+  state.teams.forEach(t=>{
+    t.players.forEach(p=>{
+      addAllTime('scorers', p.name, p.seasonGoals, t.name);
+      addAllTime('assisters', p.name, p.assists, t.name);
+      addAllTime('mvp', p.name, p.mvp, t.name);
+      addAllTime('cs', p.name, p.cs, t.name);
+      addAllTime('apps', p.name, p.apps, t.name);
+      addAllTime('cards', p.name, p.yellow+p.red*2, t.name);
+    });
+  });
+}
+function goatScore(name){
+  const A=state.allTime;
+  return (A.scorers[name]?.val||0)*3
+       + (A.assisters[name]?.val||0)*2.5
+       + (A.mvp[name]?.val||0)*4
+       + (A.cs[name]?.val||0)*2.5
+       + (A.apps[name]?.val||0)*0.1
+       - (A.cards[name]?.val||0)*0.5;
+}
+function getGOATs(){
+  const names=new Set();
+  Object.values(state.allTime).forEach(cat=>Object.keys(cat).forEach(n=>names.add(n)));
+  const arr=[...names].map(n=>({
+    name:n, score:Math.round(goatScore(n)),
+    goals:state.allTime.scorers[n]?.val||0,
+    assists:state.allTime.assisters[n]?.val||0,
+    mvp:state.allTime.mvp[n]?.val||0,
+    cs:state.allTime.cs[n]?.val||0,
+    apps:state.allTime.apps[n]?.val||0,
+    teams:(state.allTime.scorers[n]||state.allTime.mvp[n]||state.allTime.apps[n]||{teams:[]}).teams
+  }));
+  arr.sort((a,b)=>b.score-a.score);
+  return arr;
+}
+function getTopBy(cat, n=10){
+  const d=state.allTime[cat]||{};
+  return Object.values(d).sort((a,b)=>b.val-a.val).slice(0,n);
+}
+function renderLegenda(){
+  const A=state.allTime;
+  if(!A || !Object.keys(A.scorers).length){
+    return `<div class="card"><h2>🏛️ Legenda</h2>
+      <div class="empty">Belum ada data. Selesaikan minimal 1 musim.</div></div>`;
+  }
+  const goats=getGOATs().slice(0,10);
+  const section=(title,list,unit,color)=>`
+    <h3 style="margin-top:14px">${title}</h3>
+    ${list.length?`<table>
+      <tr><th>#</th><th>Pemain</th><th>Klub</th><th class="num">${unit}</th></tr>
+      ${list.map((x,i)=>`<tr>
+        <td>${i+1}</td>
+        <td>${x.name}</td>
+        <td style="font-size:10px;color:#8bb59f">${(x.teams||[]).join(', ')||'-'}</td>
+        <td class="num" style="font-weight:800;color:${color}">${x.val}</td>
+      </tr>`).join('')}
+    </table>`:'<div class="empty">-</div>'}`;
+
+  return `<div class="card">
+    <h2>🏛️ Legenda Liga Indonesia</h2>
+    <h3 style="margin-top:14px;color:#ffd700;font-size:15px">🐐 GOAT — Greatest of All Time</h3>
+    <p style="font-size:10px;color:#7fae94;margin-bottom:8px">
+      Skor = ⚽×3 + 🎯×2.5 + 🏅×4 + 🧤×2.5 + 📋×0.1 − 🟨🟥×0.5
+    </p>
+    <table>
+      <tr><th>#</th><th>Pemain</th><th class="num">Skor</th><th class="num">⚽</th><th class="num">🎯</th><th class="num">🏅</th></tr>
+      ${goats.map((x,i)=>`<tr class="${i===0?'mine':''}">
+        <td style="font-size:14px">${i+1}${i===0?' 🐐':''}</td>
+        <td>${x.name}<br><span style="font-size:9px;color:#8bb59f">${(x.teams||[]).join(', ')}</span></td>
+        <td class="num" style="font-weight:900;color:#ffd700;font-size:14px">${x.score}</td>
+        <td class="num">${x.goals}</td>
+        <td class="num">${x.assists}</td>
+        <td class="num">${x.mvp}</td>
+      </tr>`).join('')}
+    </table>
+    ${section('⚽ Top Skor Sepanjang Masa',getTopBy('scorers'),'Gol','#2ecc71')}
+    ${section('🎯 Top Asis Sepanjang Masa',getTopBy('assisters'),'Asis','#457b9d')}
+    ${section('🏅 Top MVP Sepanjang Masa',getTopBy('mvp'),'MVP','#e9c46a')}
+    ${section('🧤 Top Clean Sheet Sepanjang Masa',getTopBy('cs'),'CS','#5e60ce')}
+    ${section('📋 Top Penampilan Sepanjang Masa',getTopBy('apps'),'Laga','#8bb59f')}
+  </div>`;
+}
+
+/* ==================== BERITA ==================== */
+function renderBerita(){
+  if(!state.news.length) return `<div class="card"><h2>📰 Berita</h2><div class="empty">Belum ada berita.</div></div>`;
+  return `<div class="card">
+    <h2>📰 Berita & Rumor</h2>
+    ${state.news.map(n=>`<div class="news-item">
+      <div class="time">${n.time}</div>
+      <div class="head">${n.t}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+/* ==================== TRANSFER ==================== */
+function renderTransfer(){
+  const my=state.teams[state.myIdx];
+  const myPlayers=[...my.players].sort((a,b)=>b.rating-a.rating);
+  const avail=[];
+  state.teams.forEach((t,i)=>{
+    if(i===state.myIdx) return;
+    t.players.forEach(p=>{
+      if(t.xi.includes(p.id)) return;
+      if(p.age>40) return;
+      const price=marketValue(p);
+      if(price<=my.budget*1.5) avail.push({p,from:t,price});
+    });
+  });
+  avail.sort((a,b)=>b.p.rating-a.p.rating);
+  const buyList=avail.slice(0,50);
+  return `<div class="card">
+    <h2>💰 Bursa Transfer</h2>
+    <div style="font-size:14px;color:#e9c46a;margin-bottom:12px">
+      Budget Anda: <b>${formatIDR(my.budget)}</b>
+    </div>
+    <h3>Jual Pemain (${myPlayers.length})</h3>
+    <div class="scroll-box" style="max-height:240px">
+      <table>
+        <tr><th>Nama</th><th>Pos</th><th class="num">Rat</th><th class="num">Umur</th><th class="num">Harga</th><th></th></tr>
+        ${myPlayers.map(p=>{
+          const price=Math.round(marketValue(p)*0.8);
+          const inXI=my.xi.includes(p.id);
+          return `<tr>
+            <td>${p.name}${inXI?' <span style="color:#2ecc71;font-size:9px">XI</span>':''}${p.specialSkill?` <span onclick="showPlayerDetail(${p.id})" style="cursor:pointer">${p.specialSkill.icon}</span>`:''}</td>
+            <td><span class="pos-mini pos ${p.pos}">${p.pos}</span></td>
+            <td class="num">${p.rating}</td>
+            <td class="num">${p.age}</td>
+            <td class="num">${formatIDR(price)}</td>
+            <td><button class="btn small" onclick="sellPlayer(${p.id})">Jual</button></td>
+          </tr>`;
+        }).join('')}
+      </table>
+    </div>
+    <h3>Beli Pemain</h3>
+    <div class="scroll-box" style="max-height:320px">
+      <table>
+        <tr><th>Nama</th><th>Klub</th><th>Pos</th><th class="num">Rat</th><th class="num">Harga</th><th></th></tr>
+        ${buyList.map(x=>`<tr>
+          <td>${x.p.name}${x.p.specialSkill?` <span onclick="showPlayerDetailOther(${x.p.id})" style="cursor:pointer">${x.p.specialSkill.icon}</span>`:''}</td>
+          <td style="font-size:10px">${x.from.name}</td>
+          <td><span class="pos-mini pos ${x.p.pos}">${x.p.pos}</span></td>
+          <td class="num">${x.p.rating}</td>
+          <td class="num">${formatIDR(x.price)}</td>
+          <td><button class="btn small" ${x.price>my.budget?'disabled':''} onclick="buyPlayer(${x.p.id})">Beli</button></td>
+        </tr>`).join('')}
+      </table>
+    </div>
+  </div>`;
+}
+function buyPlayer(pid){
+  const my=state.teams[state.myIdx];
+  let seller=null, p=null;
+  for(const t of state.teams){
+    if(t===my) continue;
+    const found=t.players.find(x=>x.id===pid);
+    if(found){ seller=t; p=found; break; }
+  }
+  if(!p){ toast('Pemain tidak ditemukan'); return; }
+  const price=marketValue(p);
+  if(price>my.budget){ toast('Budget tidak cukup'); return; }
+  my.budget-=price;
+  seller.budget+=price;
+  seller.players=seller.players.filter(x=>x.id!==pid);
+  seller.xi=seller.xi.filter(id=>id!==pid);
+  if(seller.xi.length<11) autoPickXI(seller,seller.formation);
+  my.players.push(p);
+  toast(`✅ ${p.name} bergabung! -${formatIDR(price)}`);
+  render();
+}
+function sellPlayer(pid){
+  const my=state.teams[state.myIdx];
+  const p=my.players.find(x=>x.id===pid);
+  if(!p) return;
+  const price=Math.round(marketValue(p)*0.8);
+  my.budget+=price;
+  my.players=my.players.filter(x=>x.id!==pid);
+  my.xi=my.xi.filter(id=>id!==pid);
+  if(my.xi.length<11) autoPickXI(my,my.formation);
+  toast(`💸 ${p.name} dijual +${formatIDR(price)}`);
+  render();
+}
+function showPlayerDetailOther(pid){
+  for(const t of state.teams){
+    const p=t.players.find(x=>x.id===pid);
+    if(p){
+      const spec=p.specialSkill?`<div style="background:#1a1408;padding:10px;border-radius:8px;margin-top:8px;border:1px solid #ffd700">
+        <div style="font-size:20px">${p.specialSkill.icon}</div>
+        <div style="color:#ffd700;font-weight:800;font-size:13px">${p.specialSkill.name}</div>
+        <div style="font-size:10px;color:#e9c46a">${p.specialSkill.desc}</div>
+      </div>`:'';
+      const skills=(p.skills||[]).map(s=>`<span style="display:inline-block;background:#182720;padding:3px 7px;border-radius:5px;font-size:10px;margin:2px;border:1px solid #2f5442">${s.name}</span>`).join('');
+      const modal=document.createElement('div');
+      modal.id='createModal';
+      modal.innerHTML=`<div class="inner">
+        <h2>${p.name}</h2>
+        <div class="sub">${t.name} · ${p.pos} · ${p.age}th · Rating ${p.rating}</div>
+        <div style="background:#16241d;padding:10px;border-radius:8px;font-size:12px;line-height:1.8;color:#a8e6c1">
+          <b>Posisi:</b> ${(p.positions||[p.pos]).join(' · ')}<br>
+          <b>Potential:</b> ${p.potential||'-'}<br>
+          <b>Nilai pasar:</b> ${formatIDR(marketValue(p))}
+        </div>
+        ${spec}
+        <h3 style="margin-top:12px">Keahlian</h3>
+        <div>${skills||'<span class="empty">-</span>'}</div>
+        <button class="btn primary" style="width:100%;margin-top:14px" onclick="this.closest('#createModal').remove()">Tutup</button>
+      </div>`;
+      document.body.appendChild(modal);
+      return;
+    }
+  }
+}
+
+/* ==================== INTERAKSI ==================== */
+function setTab(t){ state.tab=t; state.selectedStarter=null; render(); }
+function setTableDiv(d){ state.tableDiv=d; render(); }
+function selectStarter(id){
+  state.selectedStarter = state.selectedStarter===id ? null : id;
+  render();
+}
+function swapWith(benchId){
+  if(state.selectedStarter===null){ toast('Pilih pemain inti dulu'); return; }
+  const my=state.teams[state.myIdx];
+  const newP=getP(my,benchId);
+  if(newP && newP.injury>0){ toast(`${newP.name} masih cedera ${newP.injury} pekan`); return; }
+  const i=my.xi.indexOf(state.selectedStarter);
+  const backup=my.xi[i];
+  my.xi[i]=benchId;
+  if(!checkXI(my)){ my.xi[i]=backup; toast('Formasi jadi tidak valid!'); return; }
+  state.selectedStarter=null;
+  render();
+}
+function setFormation(f){
+  const my=state.teams[state.myIdx];
+  my.formation=f; autoPickXI(my,f);
+  state.selectedStarter=null; render();
+}
+function setMentality(m){ state.teams[state.myIdx].tactics.mentality=m; render(); }
+function toggleTraining(pid){
+  state.training=state.training||[];
+  if(state.training.includes(pid)){
+    state.training=state.training.filter(x=>x!==pid);
+  } else if(state.training.length<3){
+    state.training.push(pid);
+  } else {
+    toast('Maksimal 3 pemain latihan'); return;
+  }
+  render();
+}
+function promoteYouth(pid){
+  const my=state.teams[state.myIdx];
+  const p=my.academy.find(x=>x.id===pid);
+  if(!p){ toast('Pemain tidak ditemukan'); return; }
+  if(p.age<15){ toast('Usia minimal 15 tahun untuk promosi'); return; }
+  if(my.players.length>=25){ toast('Tim utama penuh (maks 25)'); return; }
+  my.academy=my.academy.filter(x=>x.id!==pid);
+  my.players.push(p);
+  toast(`⬆️ ${p.name} naik ke tim utama!`);
+  render();
+}
+function releaseYouth(pid){
+  const my=state.teams[state.myIdx];
+  const p=my.academy.find(x=>x.id===pid);
+  if(!p) return;
+  my.academy=my.academy.filter(x=>x.id!==pid);
+  toast(`👋 ${p.name} dilepas dari akademi`);
+  render();
+}
+
+/* ===== AKHIR BAGIAN 3a ===== */
+
+// [BAGIAN 3b DISISIPKAN DI SINI]
+/* ==================== MATCH VIEW ==================== */
+function renderMatch(){
+  const m=pendingMatch;
+  if(!m) return '<div class="card"><div class="empty">Tidak ada pertandingan.</div></div>';
+  const myIsHome=m.f.home===state.myIdx;
+  return `<div class="card">
+    <div class="scoreboard">
+      <div class="sb-team">
+        <div class="sb-badge" style="background:${m.h.color};color:#08120c">${m.h.name[0]}</div>
+        ${m.h.name}
+        <div style="font-size:9px;color:#8bb59f;margin-top:2px">${m.h.formation} · ${MENTALITY[m.h.tactics.mentality].label}</div>
+      </div>
+      <div>
+        <div class="score" id="matchScore">0 - 0</div>
+        <div id="matchClock" style="text-align:center;font-size:14px;color:#a8e6c1;margin-top:4px;font-weight:700">0'</div>
+        ${m.ctx?`<div style="text-align:center;font-size:11px;color:#8bb59f;margin-top:2px">
+          ${m.ctx.weather.icon} ${m.ctx.weather.name}
+        </div>`:''}
+      </div>
+      <div class="sb-team">
+        <div class="sb-badge" style="background:${m.a.color};color:#08120c">${m.a.name[0]}</div>
+        ${m.a.name}
+        <div style="font-size:9px;color:#8bb59f;margin-top:2px">${m.a.formation} · ${MENTALITY[m.a.tactics.mentality].label}</div>
+      </div>
+    </div>
+    ${renderPitch()}
+    <div class="events" id="matchEvents"></div>
+    <div id="matchActions" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="speedBtn" onclick="toggleSpeed()">⏩ 1x</button>
+      <button class="btn" id="skipBtn" onclick="skipAnim()">⏭️ Langsung</button>
+    </div>
+  </div>`;
+}
+function getTeamPositions(team, mirror){
+  const f=FORMATION_POS[team.formation]||FORMATION_POS['4-3-3'];
+  const xi=team.xi.map(id=>getP(team,id)).filter(Boolean);
+  const out=[];
+  const idx={GK:0,DEF:0,MID:0,FWD:0};
+  xi.forEach(p=>{
+    const arr=f[p.pos];
+    if(!arr) return;
+    const pos=arr[idx[p.pos]++ % arr.length];
+    out.push({x:mirror?100-pos[0]:pos[0], y:pos[1]});
+  });
+  return out;
+}
+function renderPitch(){
+  const m=pendingMatch;
+  if(!m) return '';
+  const hPos=getTeamPositions(m.h,false);
+  const aPos=getTeamPositions(m.a,true);
+  let players='';
+  hPos.forEach((p,i)=>{
+    players+=`<g class="pp" data-bx="${p.x}" data-by="${p.y}" transform="translate(${p.x},${p.y})">
+      <circle r="1.9" fill="${m.h.color}" stroke="#fff" stroke-width="0.25"/>
+      <text y="0.7" text-anchor="middle" font-size="1.8" fill="#fff" font-weight="700">${i+1}</text>
+    </g>`;
+  });
+  aPos.forEach((p,i)=>{
+    players+=`<g class="pp" data-bx="${p.x}" data-by="${p.y}" transform="translate(${p.x},${p.y})">
+      <circle r="1.9" fill="${m.a.color}" stroke="#fff" stroke-width="0.25"/>
+      <text y="0.7" text-anchor="middle" font-size="1.8" fill="#fff" font-weight="700">${i+1}</text>
+    </g>`;
+  });
+  return `<div class="pitch-wrap">
+    <svg viewBox="0 0 100 64" class="pitch" preserveAspectRatio="xMidYMid meet">
+      <rect x="0" y="0" width="100" height="64" fill="#2d6b3a"/>
+      <rect x="0" y="0" width="100" height="8" fill="#276334"/>
+      <rect x="0" y="16" width="100" height="8" fill="#276334"/>
+      <rect x="0" y="32" width="100" height="8" fill="#276334"/>
+      <rect x="0" y="48" width="100" height="8" fill="#276334"/>
+      <rect x="1" y="1" width="98" height="62" fill="none" stroke="#fff" stroke-width="0.35" opacity="0.85"/>
+      <line x1="50" y1="1" x2="50" y2="63" stroke="#fff" stroke-width="0.3" opacity="0.85"/>
+      <circle cx="50" cy="32" r="9" fill="none" stroke="#fff" stroke-width="0.3" opacity="0.85"/>
+      <circle cx="50" cy="32" r="0.7" fill="#fff" opacity="0.85"/>
+      <rect x="1" y="14" width="16" height="36" fill="none" stroke="#fff" stroke-width="0.3" opacity="0.85"/>
+      <rect x="1" y="24" width="6" height="16" fill="none" stroke="#fff" stroke-width="0.3" opacity="0.85"/>
+      <rect x="83" y="14" width="16" height="36" fill="none" stroke="#fff" stroke-width="0.3" opacity="0.85"/>
+      <rect x="93" y="24" width="6" height="16" fill="none" stroke="#fff" stroke-width="0.3" opacity="0.85"/>
+      <rect x="0" y="28" width="1" height="8" fill="#fff"/>
+      <rect x="99" y="28" width="1" height="8" fill="#fff"/>
+      <circle cx="6" cy="32" r="1.4" fill="none" stroke="#fff" stroke-width="0.2" opacity="0.6"/>
+      <circle cx="94" cy="32" r="1.4" fill="none" stroke="#fff" stroke-width="0.2" opacity="0.6"/>
+      ${players}
+      <g class="ball" id="pitchBall" transform="translate(50,32)">
+        <circle r="0.9" fill="#fff" stroke="#111" stroke-width="0.15"/>
+      </g>
+    </svg>
+  </div>`;
+}
+function ballTargetFor(e){
+  const isHome=e.team==='home';
+  if(e.type==='goal'){
+    return isHome?{x:ri(91,95),y:ri(27,37)}:{x:ri(5,9),y:ri(27,37)};
+  }
+  if(e.type==='card'){
+    return {x:ri(25,75),y:ri(15,49)};
+  }
+  if(e.type==='commentary'){
+    const t=e.text||'';
+    if(/corner|sudut/i.test(t)){
+      const side=Math.random()<0.5?4:96;
+      return {x:side,y:Math.random()<0.5?4:60};
+    }
+    if(/kiper|penyelamatan|menepis/i.test(t)){
+      return isHome?{x:ri(88,94),y:ri(28,36)}:{x:ri(6,12),y:ri(28,36)};
+    }
+    return {x:ri(30,70),y:ri(10,54)};
+  }
+  return {x:50,y:32};
+}
+function updatePitch(e){
+  const svg=document.querySelector('.pitch');
+  if(!svg) return;
+  const ball=svg.querySelector('#pitchBall');
+  if(ball){
+    const t=ballTargetFor(e);
+    ball.setAttribute('transform',`translate(${t.x},${t.y})`);
+  }
+  svg.querySelectorAll('.pp').forEach(g=>{
+    const bx=+g.dataset.bx, by=+g.dataset.by;
+    const dx=rnd(-3,3), dy=rnd(-3,3);
+    g.setAttribute('transform',`translate(${Math.max(2,Math.min(98,bx+dx))},${Math.max(2,Math.min(62,by+dy))})`);
+  });
+}
+function resetPitch(){
+  const svg=document.querySelector('.pitch');
+  if(!svg) return;
+  const ball=svg.querySelector('#pitchBall');
+  if(ball) ball.setAttribute('transform','translate(50,32)');
+  svg.querySelectorAll('.pp').forEach(g=>{
+    g.setAttribute('transform',`translate(${g.dataset.bx},${g.dataset.by})`);
+  });
+}
+function toggleSpeed(){
+  state.animSpeed = (state.animSpeed===1) ? 2 : 1;
+  const b=document.getElementById('speedBtn');
+  if(b) b.textContent = state.animSpeed===1 ? '⏩ 1x' : '⏩⏩ 2x';
+}
+
+/* ==================== HALF TIME MODAL ==================== */
+function openHalfTimeModal(){
+  const m=pendingMatch;
+  if(!m) return;
+  const myIsHome=m.f.home===state.myIdx;
+  const myTeam=myIsHome?m.h:m.a;
+  const opp=myIsHome?m.a:m.h;
+  const myScore=myIsHome?m.ctx.hg:m.ctx.ag;
+  const oppScore=myIsHome?m.ctx.ag:m.ctx.hg;
+  const modal=document.createElement('div');
+  modal.id='createModal';
+  modal.innerHTML=`<div class="inner" style="max-width:460px">
+    <h2>⏸️ Half Time</h2>
+    <div class="sub">${myTeam.name} ${myScore} - ${oppScore} ${opp.name} · ${m.ctx.weather.icon} ${m.ctx.weather.name}</div>
+    <h3 style="margin-top:14px">🎙️ Team Talk</h3>
+    <div id="talkOpts">
+      ${TEAM_TALKS.map(t=>`
+        <button class="pc-answer" data-id="${t.id}" onclick="pickTalk('${t.id}')">
+          <b>${t.label}</b><br><span style="font-size:10px;color:#8bb59f">${t.desc}</span>
+        </button>`).join('')}
+    </div>
+    <h3 style="margin-top:14px">🔄 Substitusi (<span id="subsLeft">${m.subsLeft}</span> tersisa)</h3>
+    <div id="subRows"></div>
+    <button class="btn small" style="width:100%;margin-bottom:10px" onclick="addSubRow()">+ Tambah Substitusi</button>
+    <button class="btn primary" style="width:100%" onclick="startSecondHalf()">▶ Lanjut Babak 2</button>
+  </div>`;
+  document.body.appendChild(modal);
+  state.selectedTalk='motivasi';
+  document.querySelectorAll('#talkOpts .pc-answer').forEach(b=>{
+    if(b.dataset.id==='motivasi'){ b.style.borderColor='#2ecc71'; b.style.background='#1b3a28'; }
+  });
+  addSubRow();
+}
+function pickTalk(id){
+  state.selectedTalk=id;
+  document.querySelectorAll('#talkOpts .pc-answer').forEach(b=>{
+    b.style.borderColor='#2f5442'; b.style.background='#182720';
+    if(b.dataset.id===id){ b.style.borderColor='#2ecc71'; b.style.background='#1b3a28'; }
+  });
+}
+function addSubRow(){
+  const m=pendingMatch;
+  if(!m||m.subsLeft<=0) return;
+  const myIsHome=m.f.home===state.myIdx;
+  const myTeam=myIsHome?m.h:m.a;
+  const xi=myTeam.xi.map(id=>getP(myTeam,id)).filter(Boolean);
+  const bench=myTeam.players.filter(p=>!myTeam.xi.includes(p.id) && !p.injury && p.stamina>30);
+  if(!bench.length) return;
+  const row=document.createElement('div');
+  row.style.cssText='display:flex;gap:6px;margin-bottom:6px';
+  row.innerHTML=`
+    <select class="subOut" style="flex:1;padding:6px;background:#182720;color:#e8f0ec;border:1px solid #2f5442;border-radius:6px;font-size:11px">
+      <option value="">-- Keluar --</option>
+      ${xi.map(p=>`<option value="${p.id}">${p.name} (${p.pos})</option>`).join('')}
+    </select>
+    <select class="subIn" style="flex:1;padding:6px;background:#182720;color:#e8f0ec;border:1px solid #2f5442;border-radius:6px;font-size:11px">
+      <option value="">-- Masuk --</option>
+      ${bench.map(p=>`<option value="${p.id}">${p.name} (${p.pos} · ${p.rating})</option>`).join('')}
+    </select>
+    <button class="btn small" onclick="applySubRow(this)">✓</button>
+  `;
+  document.getElementById('subRows').appendChild(row);
+}
+function applySubRow(btn){
+  const m=pendingMatch;
+  const row=btn.parentElement;
+  const outId=+row.querySelector('.subOut').value;
+  const inId=+row.querySelector('.subIn').value;
+  if(!outId||!inId){ toast('Pilih keluar & masuk'); return; }
+  const myIsHome=m.f.home===state.myIdx;
+  const myTeam=myIsHome?m.h:m.a;
+  const outP=getP(myTeam,outId), inP=getP(myTeam,inId);
+  if(!outP||!inP){ toast('Pemain tidak valid'); return; }
+  if(inP.injury>0){ toast(`${inP.name} cedera`); return; }
+  if(inP.stamina<30){ toast(`${inP.name} kelelahan`); return; }
+  if(outP.pos!==inP.pos){ toast('Posisi harus sama'); return; }
+  const idx=myTeam.xi.indexOf(outId);
+  myTeam.xi[idx]=inId;
+  m.subsLeft--;
+  const sl=document.getElementById('subsLeft');
+  if(sl) sl.textContent=m.subsLeft;
+  row.remove();
+  toast(`🔄 ${outP.name} → ${inP.name}`);
+  if(m.subsLeft>0) addSubRow();
+}
+function startSecondHalf(){
+  const m=pendingMatch;
+  const modal=document.getElementById('createModal');
+  if(modal) modal.remove();
+  const talk=TEAM_TALKS.find(t=>t.id===state.selectedTalk)||TEAM_TALKS[2];
+  const myIsHome=m.f.home===state.myIdx;
+  if(myIsHome){ m.ctx.homeBoost=talk.atk - talk.def*0.5; }
+  else { m.ctx.awayBoost=talk.atk - talk.def*0.5; }
+  // Recompute stats XI baru
+  m.ctx.H=teamStats(m.h);
+  m.ctx.A=teamStats(m.a);
+  toast(`🎙️ ${talk.label} diterapkan`);
+  simulateSegment(m.h, m.a, 46, 90, m.ctx);
+  render();
+  animateHalf(2);
+}
+
+/* ==================== ANIMASI MATCH ==================== */
+let animTimer=null;
+function animateHalf(half){
+  const m=pendingMatch;
+  if(!m) return;
+  const evs=m.ctx.events.filter(e=> half===1 ? e.min<=45 : e.min>45)
+    .sort((a,b)=>a.min-b.min);
+  const scoreEl=document.getElementById('matchScore');
+  const clockEl=document.getElementById('matchClock');
+  const listEl=document.getElementById('matchEvents');
+  if(!scoreEl||!listEl) return;
+  let idx=0;
+  const startMin = half===1?0:45;
+  const endMin   = half===1?45:90;
+  let curMin=startMin;
+
+  clearInterval(animTimer);
+  if(half===1) resetPitch();
+
+  const MS_PER_MIN = 3333;
+  const TICK=60;
+  let last=performance.now();
+
+  animTimer=setInterval(()=>{
+    const now=performance.now();
+    const dt=now-last; last=now;
+    const speed=state.animSpeed||1;
+    curMin += (dt*speed)/MS_PER_MIN;
+
+    while(idx<evs.length && evs[idx].min<=curMin){
+      const e=evs[idx++];
+      applyEventToUI(e, m, scoreEl, listEl);
+    }
+
+    if(clockEl) clockEl.textContent=`${Math.min(endMin,Math.floor(curMin))}'`;
+
+    if(curMin>=endMin){
+      clearInterval(animTimer);
+      while(idx<evs.length){
+        applyEventToUI(evs[idx++], m, scoreEl, listEl);
+      }
+      if(clockEl) clockEl.textContent=`${endMin}'`;
+      if(half===1) openHalfTimeModal();
+      else finishFullMatch();
+    }
+  }, TICK);
+}
+function applyEventToUI(e, m, scoreEl, listEl){
+  if(e.type==='goal'){
+    let hg=0, ag=0;
+    for(const ev of m.ctx.events){
+      if(ev.type!=='goal') continue;
+      if(ev.min<e.min) { if(ev.team==='home')hg++; else ag++; }
+      else if(ev.min===e.min && ev!==e){
+        if(ev.team==='home')hg++; else ag++;
+      }
+    }
+    if(e.team==='home')hg++; else ag++;
+    scoreEl.textContent=`${hg} - ${ag}`;
+    scoreEl.classList.add('pulse');
+    setTimeout(()=>scoreEl.classList.remove('pulse'),250);
+    if(state.sound) sfxGoal();
+  } else if(e.type==='card' && state.sound){ sfxCard(); }
+  updatePitch(e);
+  const div=document.createElement('div');
+  div.className='event '+e.type+' '+(e.team||'');
+  div.textContent=`${e.min}'  ${e.text}`;
+  listEl.appendChild(div);
+  listEl.scrollTop=listEl.scrollHeight;
+}
+function skipAnim(){
+  const m=pendingMatch;
+  if(!m) return;
+  clearInterval(animTimer);
+  const scoreEl=document.getElementById('matchScore');
+  const listEl=document.getElementById('matchEvents');
+  const clockEl=document.getElementById('matchClock');
+  if(listEl) listEl.innerHTML='';
+  let hg=0,ag=0;
+  m.ctx.events.sort((a,b)=>a.min-b.min).forEach(e=>{
+    if(e.type==='goal'){ if(e.team==='home')hg++; else ag++; }
+    if(listEl){
+      const div=document.createElement('div');
+      div.className='event '+e.type+' '+(e.team||'');
+      div.textContent=`${e.min}'  ${e.text}`;
+      listEl.appendChild(div);
+    }
+  });
+  if(scoreEl) scoreEl.textContent=`${hg} - ${ag}`;
+  if(clockEl) clockEl.textContent='90\'';
+  if(listEl) listEl.scrollTop=listEl.scrollHeight;
+  finishFullMatch();
+}
+function finishFullMatch(){
+  clearInterval(animTimer);
+  const m=pendingMatch;
+  if(!m) return;
+  if(!m.finished){
+    m.f.played=true;
+    m.f.hg=m.ctx.hg; m.f.ag=m.ctx.ag;
+    finalizeMatch(m.h, m.a, m.ctx);
+    m.finished=true;
+  }
+  if(state.sound) sfxWhistle();
+  const el=document.getElementById('matchActions');
+  if(el) el.innerHTML=`<button class="btn primary" onclick="nextRound()">Lanjut ➜</button>`;
+}
+
+/* ==================== SEASON END ==================== */
+function renderSeasonEnd(){
+  const t1=getTable(1), t2=getTable(2);
+  const myTeam=state.teams[state.myIdx];
+  const myResult = (state.myDiv===1?t1:t2);
+  const myPos = myResult.findIndex(r=>r.idx===state.myIdx)+1;
+  const pr=state.lastPR;
+
+  let prMsg='';
+  if(pr){
+    if(pr.myChange==='promoted') prMsg=`<div style="background:rgba(46,204,113,.15);padding:14px;border-radius:10px;margin:12px 0;border-left:4px solid #2ecc71">
+      🎉 <b>SELAMAT! ${pr.myName} PROMOSI ke Divisi 1!</b></div>`;
+    else if(pr.myChange==='relegated') prMsg=`<div style="background:rgba(230,57,70,.15);padding:14px;border-radius:10px;margin:12px 0;border-left:4px solid #e63946">
+      😔 <b>${pr.myName} terdegradasi ke Divisi 2.</b></div>`;
+    else prMsg=`<div style="background:rgba(255,255,255,.05);padding:12px;border-radius:10px;margin:12px 0">
+      ℹ️ ${pr.myName} tetap di Divisi ${pr.myDiv} musim depan.</div>`;
+  }
+
+  const h=state.history[state.history.length-1];
+  const awardsHTML = h ? (()=>{
+    const row=(icon,label,data,unit)=>{
+      if(!data) return '';
+      return `<tr>
+        <td style="font-size:18px">${icon}</td>
+        <td>${label}</td>
+        <td><b>${data.name}</b><br><span style="font-size:10px;color:#8bb59f">${data.team}</span></td>
+        <td class="num" style="font-weight:800;color:#ffd700">${unit}</td>
+      </tr>`;
+    };
+    return `<div class="card">
+      <h2>🏅 Penghargaan Musim ${h.season}</h2>
+      <table>
+        ${row('🥇','Pemain Terbaik (MVP)',h.awardMVP,h.awardMVP?`${h.awardMVP.val} MVP`:'')}
+        ${row('👑','Rating Tertinggi',h.awardBestRating,h.awardBestRating?h.awardBestRating.rating:'')}
+        ${row('⚽','Top Skor',h.awardTopScorer,h.awardTopScorer?`${h.awardTopScorer.val} gol`:'')}
+        ${row('🎯','Top Asis',h.awardTopAssist,h.awardTopAssist?`${h.awardTopAssist.val} asis`:'')}
+        ${row('🌟','Golden Boy (U-21)',h.awardGoldenBoy,h.awardGoldenBoy?h.awardGoldenBoy.rating:'')}
+      </table>
+      <h3 style="margin-top:14px">Best XI Musim ${h.season}</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:11px">
+        ${h.bestXI.map(x=>`<div style="background:#182720;padding:6px 8px;border-radius:7px">
+          <span class="pos-mini pos ${x.pos}" style="display:inline-block;margin-right:5px">${x.pos}</span>
+          <b>${x.name}</b> <span style="color:#8bb59f">(${x.team})</span>
+          <span style="float:right;color:#ffd700;font-weight:700">${x.rating}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  })() : '';
+
+  return `<div class="card" style="text-align:center;padding:24px">
+    <div style="font-size:44px">🏁</div>
+    <h2 style="font-size:20px;margin:10px 0">Musim ${state.season-1} Berakhir</h2>
+    <div style="font-size:13px;color:#8bb59f;margin-bottom:4px">
+      🏆 Juara Div 1: <b style="color:#e9c46a">${t1[0].team.name}</b> (${t1[0].Pts} poin)
+    </div>
+    <div style="font-size:13px;color:#8bb59f">
+      🥈 Juara Div 2: <b style="color:#457b9d">${t2[0].team.name}</b> (${t2[0].Pts} poin)
+    </div>
+    <div style="font-size:13px;color:#8bb59f;margin-top:6px">
+      Posisi Anda: <b style="color:#a8e6c1">#${myPos}</b> di Divisi ${state.myDiv}
+    </div>
+    ${state.currentPialaNasWinner?`<div style="font-size:12px;color:#e9c46a;margin-top:4px">
+      🏅 Piala Nasional: <b>${state.currentPialaNasWinner.name}</b></div>`:''}
+    ${state.currentPialaNusWinner?`<div style="font-size:12px;color:#2ecc71;margin-top:2px">
+      🌏 Piala Nusantara: <b>${state.currentPialaNusWinner.name}</b></div>`:''}
+    ${state.currentLCWinner?`<div style="font-size:12px;color:#ffd700;margin-top:2px">
+      🌏 LCA: <b>${state.currentLCWinner.name}</b></div>`:''}
+    ${state.acquisitions.length?`<div style="font-size:12px;color:#a8e6c1;margin-top:6px">
+      🏢 Klub dikendalikan: ${state.acquisitions.map(a=>
+        `<b style="color:${state.teams[a.targetIdx].color}">${state.teams[a.targetIdx].name}</b> (${(a.stake*100).toFixed(0)}%)`
+      ).join(', ')}</div>`:''}
+  </div>
+  ${prMsg}
+  ${awardsHTML}
+  <div class="card">
+    <h2>🏆 Klasemen Akhir Divisi 1</h2>
+    <div class="scroll-box">
+    <table>
+      <tr><th>#</th><th>Klub</th><th class="num">Pts</th><th class="num">SG</th><th class="num">GF</th></tr>
+      ${t1.map((r,i)=>`<tr class="${r.idx===state.myIdx?'mine':''} ${i>=t1.length-RELEGATED?'rel':''}">
+        <td>${i+1}</td>
+        <td>${r.team.name}${i>=t1.length-RELEGATED?' <span style="color:#e63946;font-size:9px">▼</span>':''}</td>
+        <td class="num">${r.Pts}</td><td class="num">${r.GF-r.GA>0?'+':''}${r.GF-r.GA}</td><td class="num">${r.GF}</td>
+      </tr>`).join('')}
+    </table>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🥈 Klasemen Akhir Divisi 2</h2>
+    <div class="scroll-box">
+    <table>
+      <tr><th>#</th><th>Klub</th><th class="num">Pts</th><th class="num">SG</th><th class="num">GF</th></tr>
+      ${t2.map((r,i)=>`<tr class="${r.idx===state.myIdx?'mine':''} ${i<PROMOTED?'pro':''}">
+        <td>${i+1}</td>
+        <td>${r.team.name}${i<PROMOTED?' <span style="color:#2ecc71;font-size:9px">▲</span>':''}</td>
+        <td class="num">${r.Pts}</td><td class="num">${r.GF-r.GA>0?'+':''}${r.GF-r.GA}</td><td class="num">${r.GF}</td>
+      </tr>`).join('')}
+    </table>
+    </div>
+  </div>
+  <div class="card" style="text-align:center">
+    <button class="btn primary" onclick="startNewSeason()">🔄 Lanjut ke Musim ${state.season}</button>
+  </div>`;
+}
+
+/* ==================== STADION ==================== */
+function renderStadion(){
+  const my=state.teams[state.myIdx];
+  const st=my.stadium;
+  const lvl=STADIUM_LEVELS[st.level-1];
+  const nextLvl=STADIUM_LEVELS[st.level];
+  const last=st.revenueHistory[st.revenueHistory.length-1];
+  const mood=state.fanMood??50;
+  const moodColor=mood>=70?'#2ecc71':mood>=40?'#e9c46a':'#e63946';
+  const moodLabel=mood>=80?'🔥 Sangat Antusias':mood>=60?'😊 Antusias':mood>=40?'😐 Biasa':mood>=20?'😠 Kecewa':'😡 Marah';
+  return `<div class="card">
+    <h2>🏟️ ${lvl.name} <span style="font-size:11px;color:#8bb59f">(Level ${st.level}/6)</span></h2>
+    <div style="background:#16241d;padding:12px;border-radius:10px;margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:#a8e6c1">
+        <div>Kapasitas <b>${st.cap.toLocaleString('id-ID')}</b></div>
+        <div>Harga tiket <b>${formatIDR(st.ticketPrice)}</b></div>
+        <div>Tiket tur <b>${formatIDR(st.tourPrice)}</b></div>
+        <div>Toko avg <b>${formatIDR(st.storeAvg)}</b></div>
+        <div>Hotel/malam <b>${formatIDR(st.hotelRate)}</b></div>
+        <div>Kamar hotel <b>${st.hotelRooms}</b></div>
+      </div>
+    </div>
+    <div style="background:#16241d;padding:10px;border-radius:10px;margin-bottom:12px">
+      <div style="font-size:11px;color:#8bb59f;margin-bottom:4px">Mood Suporter</div>
+      <div style="font-size:14px;font-weight:800;color:${moodColor}">${moodLabel} (${mood}/100)</div>
+      <div style="height:6px;background:#0f1a15;border-radius:3px;margin-top:6px;overflow:hidden">
+        <div style="height:100%;width:${mood}%;background:${moodColor};transition:.3s"></div>
+      </div>
+    </div>
+    <h3>💰 Laporan Laga Kandang Terakhir</h3>
+    ${last?`
+    <h4>Pemasukan</h4>
+    <table style="margin-bottom:10px">
+      <tr><td>🎫 Tiket (${last.attendance.toLocaleString('id-ID')} / ${(last.occ*100).toFixed(2)}%)</td><td class="num" style="color:#2ecc71">${formatIDR(last.ticketRevenue)}</td></tr>
+      <tr><td>🚶 Tur Stadion (${last.tourVisitors})</td><td class="num" style="color:#2ecc71">${formatIDR(last.tourRevenue)}</td></tr>
+      <tr><td>🛍️ Toko (${last.storeBuyers})</td><td class="num" style="color:#2ecc71">${formatIDR(last.storeRevenue)}</td></tr>
+      <tr><td>🏨 Hotel (${last.hotelNights})</td><td class="num" style="color:#2ecc71">${formatIDR(last.hotelRevenue)}</td></tr>
+      <tr style="font-weight:700"><td>Subtotal</td><td class="num">${formatIDR(last.grossRevenue)}</td></tr>
+    </table>
+    <h4>Biaya</h4>
+    <table style="margin-bottom:10px">
+      <tr><td>🛡️ Keamanan</td><td class="num" style="color:#e63946">−${formatIDR(last.security)}</td></tr>
+      <tr><td>🧹 Kebersihan</td><td class="num" style="color:#e63946">−${formatIDR(last.cleaning)}</td></tr>
+      <tr><td>⚡ Operasional</td><td class="num" style="color:#e63946">−${formatIDR(last.opsCost)}</td></tr>
+      <tr><td>👮 Polisi</td><td class="num" style="color:#e63946">−${formatIDR(last.police)}</td></tr>
+      ${last.riot?`<tr style="color:#e63946;font-weight:800"><td>🔥 Rusuh</td><td class="num">−${formatIDR(last.riot.damage)}</td></tr>`:''}
+      <tr style="font-weight:700"><td>Total</td><td class="num">−${formatIDR(last.totalCost + (last.riot?last.riot.damage:0))}</td></tr>
+    </table>
+    <table style="background:#0f1a15">
+      <tr style="font-weight:900;font-size:14px">
+        <td>💰 LABA BERSIH</td>
+        <td class="num" style="color:${last.net>=0?'#2ecc71':'#e63946'}">${formatIDR(last.net)}</td>
+      </tr>
+    </table>
+    `:'<div class="empty">Belum ada laga kandang.</div>'}
+    ${nextLvl?`<div style="background:#1a2818;padding:12px;border-radius:10px;border:1px solid #2f5442;margin-top:8px">
+      <div style="font-size:12px;color:#e9c46a;margin-bottom:6px">Upgrade ke ${nextLvl.name}</div>
+      <div style="font-size:11px;color:#8bb59f;margin-bottom:8px">
+        Kapasitas ${nextLvl.cap.toLocaleString('id-ID')} · Tiket ${formatIDR(nextLvl.ticket)}
+      </div>
+      <button class="btn primary" ${my.budget<nextLvl.cost?'disabled':''} onclick="upgradeStadium()">
+        Upgrade — ${formatIDR(nextLvl.cost)}
+      </button>
+    </div>`:'<div style="color:#ffd700;text-align:center;padding:12px;font-weight:800">🏆 Stadion MAKSIMAL (150.000 kursi)!</div>'}
+  </div>`;
+}
+function upgradeStadium(){
+  const my=state.teams[state.myIdx];
+  const next=STADIUM_LEVELS[my.stadium.level];
+  if(!next||my.budget<next.cost){ toast('Budget tidak cukup'); return; }
+  my.budget-=next.cost;
+  my.stadium.level++;
+  my.stadium.cap=next.cap;
+  my.stadium.ticketPrice=next.ticket;
+  toast(`🏟️ Stadion diupgrade ke ${next.name}!`);
+  render();
+}
+
+/* ==================== SPONSOR ==================== */
+function makeSponsorOffer(teamDiv){
+  const pool=[...SPONSOR_POOL];
+  const avail=pool.filter(s=>{
+    if(teamDiv===2) return s.tier==='lokal'||s.tier==='nasional';
+    return true;
+  });
+  const s=pick(avail);
+  const t=SPONSOR_TIERS[s.tier];
+  const annual=Math.round(rnd(t.annualMin,t.annualMax)/1e9)*1e9;
+  const years=ri(2,20);
+  const paymentMode=Math.random()<0.5?'upfront':'monthly';
+  const bonuses={};
+  Object.keys(SPONSOR_BONUSES).forEach(k=>{
+    bonuses[k]=Math.round(annual*SPONSOR_BONUSES[k]);
+  });
+  return {
+    id:Date.now()+Math.random(),
+    sponsorName:s.name, color:s.color, tier:s.tier,
+    annual, years, paymentMode, bonuses,
+    totalValue:annual*years,
+    offeredSeason:state.season
+  };
+}
+function generateSponsorOffers(){
+  const my=state.teams[state.myIdx];
+  if(!my) return;
+  if(state.sponsorOffersWeek===state.round && state.sponsorOffers.length) return;
+  state.sponsorOffersWeek=state.round;
+  const count=state.sponsors.length>=3?ri(1,2):ri(2,4);
+  state.sponsorOffers=[];
+  for(let i=0;i<count;i++) state.sponsorOffers.push(makeSponsorOffer(my.div));
+}
+function acceptSponsor(offerId){
+  const my=state.teams[state.myIdx];
+  const offer=state.sponsorOffers.find(o=>o.id===offerId);
+  if(!offer) return;
+  if(state.sponsors.length>=5){ toast('Maksimal 5 sponsor aktif'); return; }
+  const upfront=offer.paymentMode==='upfront'?offer.annual*offer.years:0;
+  if(upfront>0) my.budget += upfront;
+  state.sponsors.push({
+    ...offer,
+    startSeason:state.season,
+    endSeason:state.season+offer.years-1,
+    lastPaidSeason:state.season,
+    totalPaid:upfront,
+    bonusesEarned:0
+  });
+  state.sponsorOffers=state.sponsorOffers.filter(o=>o.id!==offerId);
+  toast(`🤝 ${offer.sponsorName} jadi sponsor!`);
+  if(state.sound) sfxClick();
+  render();
+}
+function rejectSponsor(offerId){
+  state.sponsorOffers=state.sponsorOffers.filter(o=>o.id!==offerId);
+  render();
+}
+function renderSponsor(){
+  const my=state.teams[state.myIdx];
+  generateSponsorOffers();
+  const tierLabel={lokal:'🏠 Lokal',nasional:'🇮🇩 Nasional',jumbo:'🌟 Jumbo',mega:'💎 Mega'};
+  const offerCards=state.sponsorOffers.map(o=>`
+    <div style="background:#16241d;border:1px solid ${o.color};border-radius:10px;padding:12px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <b style="color:${o.color};font-size:14px">${o.sponsorName}</b>
+        <span style="font-size:10px;color:#a8e6c1">${tierLabel[o.tier]}</span>
+      </div>
+      <div style="font-size:12px;color:#e8f0ec;line-height:1.8;margin-bottom:8px">
+        Nilai: <b style="color:#ffd700">${formatIDR(o.annual)}/tahun</b><br>
+        Kontrak: <b>${o.years} tahun</b> (total ${formatIDR(o.totalValue)})<br>
+        Pembayaran: <b>${o.paymentMode==='upfront'?'💵 Dimuka':'📅 Bulanan'}</b><br>
+        <span style="font-size:10px;color:#8bb59f">
+          Bonus Juara Liga: ${formatIDR(o.bonuses.juara_liga)}<br>
+          Bonus Juara Piala: ${formatIDR(o.bonuses.juara_piala)}<br>
+          Bonus Juara LCA: ${formatIDR(o.bonuses.juara_lca)}
+        </span>
+      </div>
+      <div class="row">
+        <button class="btn primary" onclick="acceptSponsor(${o.id})">✓ Tanda Tangan</button>
+        <button class="btn" onclick="rejectSponsor(${o.id})">✗ Tolak</button>
+      </div>
+    </div>
+  `).join('');
+  const activeCards=state.sponsors.map(sp=>{
+    const yearsLeft=Math.max(0,sp.endSeason-state.season+1);
+    return `<div style="background:#0f1a15;border:1px solid #2f5442;border-radius:10px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <b style="color:${sp.color}">${sp.sponsorName}</b>
+        <span style="font-size:10px;color:#8bb59f">${tierLabel[sp.tier]}</span>
+      </div>
+      <div style="font-size:11px;color:#a8e6c1;margin-top:6px;line-height:1.7">
+        ${formatIDR(sp.annual)}/tahun · ${sp.paymentMode==='upfront'?'Dimuka':'Bulanan'}<br>
+        Sisa kontrak: <b>${yearsLeft} tahun</b><br>
+        Total dibayar: <b style="color:#ffd700">${formatIDR(sp.totalPaid)}</b><br>
+        Bonus diperoleh: <b style="color:#2ecc71">${formatIDR(sp.bonusesEarned)}</b>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="card">
+    <h2>🤝 Sponsor Klub</h2>
+    <div style="font-size:12px;color:#8bb59f;margin-bottom:10px">
+      Aktif: <b>${state.sponsors.length}/5</b> · Budget: <b style="color:#ffd700">${formatIDR(my.budget)}</b>
+    </div>
+    <h3>Tawaran Sponsor</h3>
+    ${offerCards||'<div class="empty">Tidak ada tawaran baru. Muncul lagi pekan depan.</div>'}
+    <h3 style="margin-top:16px">Sponsor Aktif</h3>
+    ${activeCards||'<div class="empty">Belum ada sponsor.</div>'}
+  </div>`;
+}
+
+/* ==================== IPO ==================== */
+function canIPO(team){
+  if(team.listed) return {ok:false, reason:'Sudah tercatat di bursa'};
+  if(team.budget < IPO_CONFIG.minBudget) return {ok:false, reason:`Budget minimal ${formatIDR(IPO_CONFIG.minBudget)}`};
+  if((state.managerReputation||0) < IPO_CONFIG.minReputation) return {ok:false, reason:`Reputasi manajer minimal ${IPO_CONFIG.minReputation}`};
+  if((state.trophyRoom?.length||0) < IPO_CONFIG.minTrophy) return {ok:false, reason:`Minimal ${IPO_CONFIG.minTrophy} trofi`};
+  if(team.div !== 1) return {ok:false, reason:'Hanya klub Divisi 1'};
+  return {ok:true};
+}
+function calculateValuation(team){
+  const squadValue=team.players.reduce((s,p)=>s+marketValue(p),0);
+  const stadiumValue=team.stadium.cap*500000;
+  const trophyValue=(state.trophyRoom?.length||0)*50e9;
+  const reputationValue=(state.managerReputation||50)*1e9;
+  return squadValue+stadiumValue+trophyValue+reputationValue;
+}
+function renderIPO(){
+  const my=state.teams[state.myIdx];
+  if(my.listed) return renderBursaDashboard();
+  const chk=canIPO(my);
+  const valuation=calculateValuation(my);
+  const estPrice=Math.max(IPO_CONFIG.basePrice, Math.round(valuation/IPO_CONFIG.shareCount/100)*100);
+  return `<div class="card" style="background:linear-gradient(140deg,#1a1408,#0f1a15);border-color:#ffd700">
+    <div style="text-align:center;padding:8px 0">
+      <div style="font-size:44px">📈</div>
+      <h2 style="color:#ffd700;font-size:20px">GO PUBLIC</h2>
+      <div style="font-size:11px;color:#8bb59f;margin-bottom:14px">Bawa ${my.name} ke Bursa Efek</div>
+    </div>
+    <div style="background:#0f1a15;padding:12px;border-radius:10px;margin-bottom:12px">
+      <h3>Prospektus Ringkas</h3>
+      <table>
+        <tr><td>Valuasi Klub</td><td class="num" style="color:#ffd700;font-weight:800">${formatIDR(valuation)}</td></tr>
+        <tr><td>Total Saham</td><td class="num">${IPO_CONFIG.shareCount.toLocaleString('id-ID')}</td></tr>
+        <tr><td>Perkiraan Harga IPO</td><td class="num" style="color:#2ecc71;font-weight:800">${formatIDR(estPrice)}</td></tr>
+        <tr><td>Saham Publik</td><td class="num">${(IPO_CONFIG.publicPct*100).toFixed(0)}%</td></tr>
+        <tr><td>Dana Terkumpul</td><td class="num" style="color:#ffd700">${formatIDR(estPrice*IPO_CONFIG.shareCount*IPO_CONFIG.publicPct)}</td></tr>
+      </table>
+    </div>
+    <div style="background:#0f1a15;padding:12px;border-radius:10px;margin-bottom:14px">
+      <h3>Syarat Regulator</h3>
+      <div style="font-size:12px;line-height:2">
+        <div>${my.div===1?'✅':'❌'} Klub di Divisi 1</div>
+        <div>${my.budget>=IPO_CONFIG.minBudget?'✅':'❌'} Budget ≥ ${formatIDR(IPO_CONFIG.minBudget)}</div>
+        <div>${(state.managerReputation||0)>=IPO_CONFIG.minReputation?'✅':'❌'} Reputasi ≥ ${IPO_CONFIG.minReputation} (kini ${state.managerReputation||0})</div>
+        <div>${(state.trophyRoom?.length||0)>=IPO_CONFIG.minTrophy?'✅':'❌'} Min 1 trofi (kini ${state.trophyRoom?.length||0})</div>
+      </div>
+    </div>
+    ${chk.ok
+      ? `<button class="btn primary" style="width:100%;padding:14px;font-size:14px" onclick="startIPOFlow()">📄 Ajukan Prospektus ke OJK</button>`
+      : `<div style="text-align:center;color:#e63946;font-size:12px;padding:10px">Belum memenuhi syarat</div>`}
+  </div>`;
+}
+function startIPOFlow(){
+  const my=state.teams[state.myIdx];
+  const valuation=calculateValuation(my);
+  const basePrice=Math.max(IPO_CONFIG.basePrice, Math.round(valuation/IPO_CONFIG.shareCount/100)*100);
+  state.ipoFlow={stage:'approval', basePrice, publicPct:IPO_CONFIG.publicPct, days:ri(3,10)};
+  toast('📄 Prospektus diajukan ke OJK');
+  render();
+}
+function ipoAdvance(){
+  const f=state.ipoFlow;
+  if(!f) return;
+  f.days--;
+  if(f.days<=0){
+    if(Math.random()<0.15){
+      toast('❌ OJK menolak prospektus');
+      state.news.unshift({t:'❌ Pengajuan IPO ditolak OJK',time:`Musim ${state.season}`});
+      state.ipoFlow=null; render(); return;
+    }
+    f.stage='bookbuilding';
+    toast('✅ OJK menyetujui!');
+  } else {
+    toast(`⏳ ${f.days} hari lagi`);
+  }
+  render();
+}
+function updateIPOEstimate(){
+  const f=state.ipoFlow;
+  if(!f) return;
+  const price=+document.getElementById('ipoPrice').value;
+  const pct=+document.getElementById('ipoPct').value/100;
+  const publicShares=Math.round(IPO_CONFIG.shareCount*pct);
+  const raised=publicShares*price;
+  const el=document.getElementById('ipoEstimate');
+  if(!el) return;
+  el.innerHTML=`<table style="font-size:12px">
+    <tr><td>Saham dilepas</td><td class="num">${publicShares.toLocaleString('id-ID')}</td></tr>
+    <tr style="font-weight:800"><td>Dana masuk kas</td><td class="num" style="color:#2ecc71;font-size:14px">${formatIDR(raised)}</td></tr>
+    <tr><td>Market cap awal</td><td class="num">${formatIDR(IPO_CONFIG.shareCount*price)}</td></tr>
+  </table>`;
+}
+function cancelIPO(){ state.ipoFlow=null; render(); }
+function confirmIPO(){
+  const my=state.teams[state.myIdx];
+  const f=state.ipoFlow;
+  if(!f) return;
+  const price=+document.getElementById('ipoPrice').value;
+  const pct=+document.getElementById('ipoPct').value/100;
+  if(!price||price<=0){ toast('Harga tidak valid'); return; }
+  if(pct<0.15||pct>0.49){ toast('Persentase 15–49%'); return; }
+  const total=IPO_CONFIG.shareCount;
+  const publicShares=Math.round(total*pct);
+  const insiderShares=total-publicShares;
+  const raised=publicShares*price;
+  my.budget+=raised;
+  my.listed=true;
+  my.shares={
+    total, public:publicShares, insider:insiderShares,
+    price, ipoPrice:price, high:price, low:price,
+    history:[{season:state.season, week:state.round, price}],
+    owners:[],
+    dividendPerShare:0,
+    totalDividendPaid:0
+  };
+  state.ipoFlow=null;
+  state.news.unshift({t:`🎉 ${my.name} resmi tercatat di bursa! Dana ${formatIDR(raised)}`,time:`Musim ${state.season}`});
+  if(state.sound){ sfxGoal(); setTimeout(sfxGoal, 200); }
+  toast('🎉 IPO SUKSES!');
+  render();
+}
+function renderBursaDashboard(){
+  const my=state.teams[state.myIdx];
+  const s=my.shares;
+  const marketCap=s.total*s.price;
+  const change24=s.history.length>=2 ? ((s.price-s.history[s.history.length-2].price)/s.history[s.history.length-2].price*100) : 0;
+  const changeColor=change24>=0?'#2ecc71':'#e63946';
+  const changeIcon=change24>=0?'▲':'▼';
+  const recent=s.history.slice(-30);
+  const maxP=Math.max(...recent.map(x=>x.price), s.price);
+  const minP=Math.min(...recent.map(x=>x.price), s.price);
+  const range=maxP-minP||1;
+  const chartPts=recent.map((x,i)=>{
+    const px=i/(recent.length-1||1)*100;
+    const py=40-((x.price-minP)/range)*36;
+    return `${px},${py}`;
+  }).join(' ');
+  const chartColor=recent.length>1 && recent[recent.length-1].price>=recent[0].price?'#2ecc71':'#e63946';
+  return `<div class="card" style="background:linear-gradient(140deg,#0f1a15,#1a1408);border-color:#ffd700">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-size:11px;color:#ffd700;letter-spacing:2px;font-weight:800">LIVE TRADING</div>
+        <h2 style="margin:2px 0">${my.name}</h2>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#7fae94">KODE</div>
+        <div style="font-size:16px;font-weight:900;color:#ffd700">${my.name.slice(0,4).toUpperCase()}</div>
+      </div>
+    </div>
+    <div style="background:#000;padding:16px;border-radius:12px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div style="font-size:26px;font-weight:900;color:#fff">${formatIDR(s.price)}</div>
+        <div style="font-size:16px;color:${changeColor};font-weight:800">${changeIcon} ${Math.abs(change24).toFixed(2)}%</div>
+      </div>
+      <svg viewBox="0 0 100 42" style="width:100%;height:100px;margin-top:8px">
+        <polyline points="${chartPts}" fill="none" stroke="${chartColor}" stroke-width="0.8"/>
+      </svg>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:#0f1a15;padding:10px;border-radius:8px">
+        <div style="font-size:10px;color:#7fae94">MARKET CAP</div>
+        <div style="font-size:14px;font-weight:800;color:#ffd700">${formatIDR(marketCap)}</div>
+      </div>
+      <div style="background:#0f1a15;padding:10px;border-radius:8px">
+        <div style="font-size:10px;color:#7fae94">SAHAM PUBLIK</div>
+        <div style="font-size:14px;font-weight:800;color:#2ecc71">${s.public.toLocaleString('id-ID')}</div>
+      </div>
+      <div style="background:#0f1a15;padding:10px;border-radius:8px">
+        <div style="font-size:10px;color:#7fae94">HARGA IPO</div>
+        <div style="font-size:14px;font-weight:800">${formatIDR(s.ipoPrice)}</div>
+      </div>
+      <div style="background:#0f1a15;padding:10px;border-radius:8px">
+        <div style="font-size:10px;color:#7fae94">DIVIDEN TOTAL</div>
+        <div style="font-size:14px;font-weight:800;color:#e9c46a">${formatIDR(s.totalDividendPaid)}</div>
+      </div>
+    </div>
+    <h3>Aksi Korporasi</h3>
+    <div class="row" style="margin-bottom:8px">
+      <button class="btn" ${my.budget<s.public*0.1*s.price?'disabled':''} onclick="buybackShares(0.10)">Buyback 10%</button>
+      <button class="btn" ${my.budget<s.public*0.25*s.price?'disabled':''} onclick="buybackShares(0.25)">Buyback 25%</button>
+      <button class="btn danger" ${my.budget<s.public*s.price?'disabled':''} onclick="delistStock()">Delisting</button>
+    </div>
+    <div class="row">
+      <button class="btn" ${my.budget<s.total*10000?'disabled':''} onclick="payDividend(10000)">Div Rp 10rb</button>
+      <button class="btn" ${my.budget<s.total*25000?'disabled':''} onclick="payDividend(25000)">Div Rp 25rb</button>
+      <button class="btn" ${my.budget<s.total*50000?'disabled':''} onclick="payDividend(50000)">Div Rp 50rb</button>
+    </div>
+    <h3 style="margin-top:16px">🏦 Papan Bursa</h3>
+    ${(()=>{
+      const listed=state.teams.filter(t=>t.listed).map(t=>({t, mc:t.shares.total*t.shares.price})).sort((a,b)=>b.mc-a.mc);
+      if(!listed.length) return '<div class="empty">Belum ada.</div>';
+      return `<table>
+        <tr><th>#</th><th>Klub</th><th class="num">Harga</th><th class="num">Market Cap</th></tr>
+        ${listed.map((x,i)=>`<tr class="${x.t===my?'mine':''}">
+          <td>${i+1}</td>
+          <td>${x.t.name}</td>
+          <td class="num">${formatIDR(x.t.shares.price)}</td>
+          <td class="num" style="color:#ffd700">${formatIDR(x.mc)}</td>
+        </tr>`).join('')}
+      </table>`;
+    })()}
+  </div>`;
+}
+function buybackShares(pct){
+  const my=state.teams[state.myIdx];
+  if(!my.listed) return;
+  const buyQty=Math.round(my.shares.public*pct);
+  if(buyQty<=0) return;
+  const cost=buyQty*my.shares.price;
+  if(my.budget<cost){ toast('Budget tidak cukup'); return; }
+  my.budget -= cost;
+  my.shares.public -= buyQty;
+  my.shares.insider += buyQty;
+  toast(`💼 Buyback ${buyQty.toLocaleString('id-ID')} lembar`);
+  render();
+}
+function delistStock(){
+  const my=state.teams[state.myIdx];
+  if(!my.listed) return;
+  const cost=my.shares.public*my.shares.price;
+  if(my.budget<cost){ toast(`Butuh ${formatIDR(cost)}`); return; }
+  my.budget -= cost;
+  my.shares.insider=my.shares.total;
+  my.shares.public=0;
+  my.listed=false;
+  state.news.unshift({t:`📉 ${my.name} delisting dari bursa`,time:`Musim ${state.season}`});
+  toast('📉 Delisting berhasil');
+  render();
+}
+function payDividend(perShare){
+  const my=state.teams[state.myIdx];
+  if(!my.listed){ toast('Belum IPO'); return; }
+  const totalCost=my.shares.total*perShare;
+  if(my.budget<totalCost){ toast('Budget tidak cukup'); return; }
+  my.budget -= totalCost;
+  my.shares.dividendPerShare=perShare;
+  my.shares.totalDividendPaid+=totalCost;
+  state.lastDividendSeason=state.season;
+  toast(`💵 Dividen: ${formatIDR(totalCost)}`);
+  render();
+}
+
+/* ==================== AKUISISI ==================== */
+function calculateClubValue(team){
+  const squadValue=team.players.reduce((s,p)=>s+marketValue(p),0);
+  const stadiumValue=team.stadium.cap*400000;
+  return squadValue+stadiumValue;
+}
+function acquireClub(targetIdx, pct){
+  const my=state.teams[state.myIdx];
+  const target=state.teams[targetIdx];
+  if(!target||targetIdx===state.myIdx){ toast('Pilih klub lain'); return; }
+  if(target.acquiredBy!==null && target.acquiredBy!==state.myIdx){
+    toast(`${target.name} sudah dikendalikan klub lain`); return;
+  }
+  const value=calculateClubValue(target);
+  const cost=Math.round(value*pct);
+  if(my.budget<cost){ toast(`Butuh ${formatIDR(cost)}`); return; }
+  my.budget-=cost;
+  target.acquiredBy=state.myIdx;
+  target.acquiredStake=Math.min(1,(target.acquiredStake||0)+pct);
+  const totalStake=target.acquiredStake;
+  let acq=state.acquisitions.find(a=>a.targetIdx===targetIdx);
+  if(!acq){
+    acq={targetIdx, totalCost:cost, stake:totalStake, since:state.season};
+    state.acquisitions.push(acq);
+  } else {
+    acq.totalCost+=cost;
+    acq.stake=totalStake;
+  }
+  state.news.unshift({t:`🏢 ${my.name} akuisisi ${(pct*100).toFixed(0)}% ${target.name} — ${formatIDR(cost)}`,time:`Musim ${state.season}`});
+  if(totalStake>=0.51){ toast(`👑 ${target.name} dikuasai!`); }
+  else toast(`🏢 ${(totalStake*100).toFixed(0)}% ${target.name} dikuasai`);
+  if(state.sound) sfxGoal();
+  render();
+}
+function releaseClub(targetIdx){
+  const target=state.teams[targetIdx];
+  if(!target||target.acquiredBy!==state.myIdx) return;
+  const value=calculateClubValue(target);
+  const refund=Math.round(value*target.acquiredStake*0.85);
+  state.teams[state.myIdx].budget+=refund;
+  state.acquisitions=state.acquisitions.filter(a=>a.targetIdx!==targetIdx);
+  target.acquiredBy=null;
+  target.acquiredStake=0;
+  toast(`💸 ${target.name} dilepas +${formatIDR(refund)}`);
+  render();
+}
+function renderAkuisisi(){
+  const my=state.teams[state.myIdx];
+  const owned=state.acquisitions;
+  const available=state.teams.map((t,i)=>({t,i}))
+    .filter(x=>x.i!==state.myIdx && (x.t.acquiredBy===null || x.t.acquiredBy===state.myIdx))
+    .map(x=>{
+      const val=calculateClubValue(x.t);
+      const stake=x.t.acquiredStake||0;
+      return {...x, val, stake};
+    })
+    .sort((a,b)=>a.val-b.val);
+  return `<div class="card">
+    <h2>🏢 Akuisisi Klub</h2>
+    <div style="background:#16241d;padding:12px;border-radius:10px;margin-bottom:12px;font-size:12px;color:#8bb59f;line-height:1.8">
+      Beli saham klub lain untuk pendapatan pasif tiap musim.<br>
+      • <b>10%+</b> akses pemain akademi mereka<br>
+      • <b>51%+</b> kendali penuh<br>
+      • <b>100%</b> kepemilikan penuh
+    </div>
+    <h3>💰 Klub Milik Anda</h3>
+    ${owned.length?owned.map(a=>{
+      const t=state.teams[a.targetIdx];
+      return `<div style="background:#0f1a15;border:1px solid #ffd700;border-radius:10px;padding:10px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="color:${t.color}">${t.name}</b>
+          <span style="font-size:11px;color:#ffd700">${(a.stake*100).toFixed(0)}%</span>
+        </div>
+        <div style="font-size:11px;color:#8bb59f;margin-top:4px">
+          Div ${t.div} · Investasi: ${formatIDR(a.totalCost)} · Sejak musim ${a.since}
+        </div>
+        <button class="btn small danger" style="margin-top:6px" onclick="releaseClub(${a.targetIdx})">Lepas</button>
+      </div>`;
+    }).join(''):'<div class="empty">Belum memiliki klub lain.</div>'}
+    <h3 style="margin-top:16px">🎯 Klub Tersedia</h3>
+    <div style="font-size:11px;color:#7fae94;margin-bottom:8px">
+      Budget: <b style="color:#ffd700">${formatIDR(my.budget)}</b>
+    </div>
+    ${available.slice(0,15).map(x=>{
+      const cost10=Math.round(x.val*0.10);
+      const costTo51=Math.round(x.val*(0.51-x.stake));
+      const costRest=Math.round(x.val*(1-x.stake));
+      return `<div style="background:#16241d;border:1px solid #24382e;border-radius:10px;padding:10px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <b style="color:${x.t.color}">${x.t.name}</b>
+          <span style="font-size:10px;color:#8bb59f">Div ${x.t.div}</span>
+        </div>
+        <div style="font-size:11px;color:#8bb59f;line-height:1.7;margin-bottom:8px">
+          Nilai: <b style="color:#ffd700">${formatIDR(x.val)}</b><br>
+          Kepemilikan: <b>${(x.stake*100).toFixed(0)}%</b>
+        </div>
+        <div class="row">
+          ${x.stake<0.10?`<button class="btn small" ${my.budget<cost10?'disabled':''} onclick="acquireClub(${x.i},0.10)">+10% (${formatIDR(cost10)})</button>`:''}
+          ${x.stake>=0.10 && x.stake<0.51?`<button class="btn small primary" ${my.budget<costTo51?'disabled':''} onclick="acquireClub(${x.i},${(0.51-x.stake).toFixed(2)})">Jadi 51% (${formatIDR(costTo51)})</button>`:''}
+          ${x.stake>=0.51 && x.stake<0.999?`<button class="btn small primary" ${my.budget<costRest?'disabled':''} onclick="acquireClub(${x.i},${(1-x.stake).toFixed(2)})">100% (${formatIDR(costRest)})</button>`:''}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+/* ==================== MANAGER MODAL ==================== */
+function openManagerNameModal(){
+  const m=document.createElement('div');
+  m.id='createModal';
+  m.innerHTML=`<div class="inner">
+    <h2>👔 Profil Manajer</h2>
+    <div class="sub">Kenalkan diri Anda sebelum memimpin klub</div>
+    <label>Nama Manajer</label>
+    <input id="mgrName" maxlength="30" placeholder="cth: Budi Santoso">
+    <label>Kebangsaan</label>
+    <select id="mgrNat">
+      ${['Indonesia','Malaysia','Singapura','Thailand','Vietnam','Filipina','Jepang','Korea Selatan','Brasil','Argentina','Belanda','Spanyol','Italia','Jerman','Inggris'].map(n=>
+        `<option value="${n}" ${n==='Indonesia'?'selected':''}>${n}</option>`
+      ).join('')}
+    </select>
+    <label>Latar Belakang</label>
+    <select id="mgrBg">
+      <option value="50">Mantan Pemain Profesional</option>
+      <option value="45">Analis Sepak Bola</option>
+      <option value="40">Pelatih Akademi</option>
+      <option value="35">Manajer Pemula</option>
+      <option value="55">Legenda Klub</option>
+    </select>
+    <div class="row" style="margin-top:16px">
+      <button class="btn" onclick="closeManagerModal()">Batal</button>
+      <button class="btn primary" onclick="saveManagerName()">Mulai Karier</button>
+    </div>
+  </div>`;
+  document.body.appendChild(m);
+  setTimeout(()=>{const el=document.getElementById('mgrName'); if(el) el.focus();},100);
+}
+function closeManagerModal(){
+  const m=document.getElementById('createModal');
+  if(m) m.remove();
+}
+function saveManagerName(){
+  const n=(document.getElementById('mgrName').value||'').trim();
+  if(n.length<3){ toast('Nama minimal 3 huruf'); return; }
+  state.managerName=n;
+  state.managerNationality=document.getElementById('mgrNat').value;
+  state.managerReputation=+document.getElementById('mgrBg').value;
+  closeManagerModal();
+  toast(`👔 Selamat datang, ${n}!`);
+  render();
+}
+
+/* ==================== PRESS CONFERENCE ==================== */
+const PC_QUESTIONS=[
+  {q:'Bagaimana persiapan tim menjelang laga?',
+   a:[
+     {t:'Kami siap tempur, target 3 poin.',eff:+2},
+     {t:'Lawan kuat, kami berhati-hati.',eff:0},
+     {t:'Kami tidak peduli lawan, kami menang!',eff:-1}
+   ]},
+  {q:'Bagaimana kondisi pemain kunci Anda?',
+   a:[
+     {t:'Semua dalam kondisi prima.',eff:+1},
+     {t:'Ada sedikit masalah, tapi tidak serius.',eff:0},
+     {t:'Kami kehilangan beberapa pemain penting.',eff:-1}
+   ]},
+  {q:'Kompetisi musim ini sangat ketat, komentar?',
+   a:[
+     {t:'Kami fokus pada pertandingan sendiri.',eff:+1},
+     {t:'Kami akan berjuang sampai akhir.',eff:+2},
+     {t:'Kami kurang beruntung sejauh ini.',eff:-1}
+   ]},
+  {q:'Ada rumor transfer pemain bintang, benar?',
+   a:[
+     {t:'Tidak ada komentar.',eff:0},
+     {t:'Kami selalu mencari pemain terbaik.',eff:+1},
+     {t:'Itu tidak benar.',eff:-1}
+   ]}
+];
+function openPressConference(){
+  const qs=[];
+  while(qs.length<2){const q=pick(PC_QUESTIONS);if(!qs.includes(q))qs.push(q);}
+  const m=document.createElement('div');
+  m.id='createModal';
+  m.innerHTML=`<div class="inner">
+    <h2>🎤 Press Conference</h2>
+    <div class="sub">Jawab pertanyaan media — pengaruhi moral tim</div>
+    ${qs.map(q=>`
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;color:#a8e6c1;margin-bottom:6px">"${q.q}"</div>
+        ${q.a.map(a=>`<button class="pc-answer" onclick="answerPC(${a.eff},this)">${a.t}</button>`).join('')}
+      </div>
+    `).join('')}
+    <button class="btn primary" style="width:100%" onclick="closePC()">Selesai</button>
+  </div>`;
+  document.body.appendChild(m);
+}
+function answerPC(eff,btn){
+  state.morale=(state.morale||0)+eff;
+  btn.style.background=eff>0?'#1d3a27':eff<0?'#3a1d20':'#26432f';
+  btn.style.borderColor=eff>0?'#2ecc71':eff<0?'#e63946':'#457b9d';
+  btn.disabled=true;
+}
+function closePC(){
+  const m=document.getElementById('createModal');
+  if(m) m.remove();
+  if(state.morale){
+    const my=state.teams[state.myIdx];
+    my.players.forEach(p=>{p.rating=Math.max(40,Math.min(95,p.rating+Math.round(state.morale/3)));});
+    toast(`Moral: ${state.morale>0?'+':''}${state.morale}`);
+  }
+  state.morale=0;
+  render();
+  setTimeout(()=>playRound(), 100);
+}
+
+/* ==================== CREATE PLAYER ==================== */
+let createTemp={name:'', pos:'MID', age:16, tier:'normal'};
+function openCreatePlayer(){
+  createTemp={name:'', pos:'MID', age:16, tier:'normal'};
+  renderCreateModal();
+}
+function closeCreatePlayer(){
+  const m=document.getElementById('createModal');
+  if(m) m.remove();
+}
+function updateCreateTemp(key,val){
+  createTemp[key]=val;
+  const c=document.getElementById('createCost');
+  if(c) c.innerHTML=createCostHTML();
+}
+function createCostHTML(){
+  const baseR=avg(state.teams[state.myIdx].players.map(p=>p.rating))||70;
+  const t=CREATE_TIERS[createTemp.tier];
+  const potential=Math.round(baseR*0.8 + t.potBonus + 10);
+  const ageFactor=createTemp.age<=17?1.5:createTemp.age<=19?1.2:createTemp.age<=22?0.9:0.6;
+  const cost=Math.round(t.cost*ageFactor);
+  const budget=state.teams[state.myIdx].budget;
+  const afford=cost<=budget;
+  return `Biaya: <b style="color:${afford?'#2ecc71':'#e63946'}">${formatIDR(cost)}</b>
+    · Budget: <b>${formatIDR(budget)}</b><br>
+    <span style="font-size:10px;color:#8bb59f">
+      Perkiraan potential: <b style="color:${t.color}">${potential}</b>
+    </span>`;
+}
+function renderCreateModal(){
+  closeCreatePlayer();
+  const m=document.createElement('div');
+  m.id='createModal';
+  m.innerHTML=`<div class="inner">
+    <h2>✨ Ciptakan Pemain</h2>
+    <div class="sub">Rancang pemain impian ke akademi</div>
+    <label>Nama Lengkap</label>
+    <input id="cpName" maxlength="30" placeholder="cth: Bambang Wijaya"
+      value="${createTemp.name}"
+      oninput="updateCreateTemp('name',this.value)">
+    <label>Posisi</label>
+    <select id="cpPos" onchange="updateCreateTemp('pos',this.value)">
+      ${['GK','DEF','MID','FWD'].map(p=>
+        `<option value="${p}" ${createTemp.pos===p?'selected':''}>${
+          {GK:'🧤 Kiper',DEF:'🛡️ Bek',MID:'🎯 Gelandang',FWD:'⚽ Penyerang'}[p]
+        }</option>`).join('')}
+    </select>
+    <label>Umur (13–18)</label>
+    <input id="cpAge" type="number" min="13" max="18" value="${createTemp.age}"
+      oninput="updateCreateTemp('age',Math.max(13,Math.min(18,+this.value||16)))">
+    <label>Talenta</label>
+    <select id="cpTier" onchange="updateCreateTemp('tier',this.value)">
+      ${Object.entries(CREATE_TIERS).map(([k,v])=>
+        `<option value="${k}" ${createTemp.tier===k?'selected':''}>${v.label}</option>`
+      ).join('')}
+    </select>
+    <div class="cost" id="createCost">${createCostHTML()}</div>
+    <div class="row">
+      <button class="btn" onclick="closeCreatePlayer()">Batal</button>
+      <button class="btn primary" onclick="createCustomPlayer()">✨ Ciptakan</button>
+    </div>
+  </div>`;
+  document.body.appendChild(m);
+}
+function createCustomPlayer(){
+  const my=state.teams[state.myIdx];
+  const name=(createTemp.name||'').trim();
+  if(name.length<3){ toast('Nama minimal 3 huruf'); return; }
+  const allNames=[];
+  state.teams.forEach(t=>{
+    t.players.forEach(p=>allNames.push(p.name.toLowerCase()));
+    t.academy.forEach(p=>allNames.push(p.name.toLowerCase()));
+  });
+  if(allNames.includes(name.toLowerCase())){ toast('Nama sudah dipakai'); return; }
+  const t=CREATE_TIERS[createTemp.tier];
+  const age=createTemp.age;
+  const ageFactor=age<=17?1.5:age<=19?1.2:age<=22?0.9:0.6;
+  const cost=Math.round(t.cost*ageFactor);
+  if(cost>my.budget){ toast('Budget tidak cukup'); return; }
+  const baseR=avg(my.players.map(p=>p.rating))||70;
+  const potential=Math.max(60,Math.min(96,Math.round(baseR*0.8 + t.potBonus + 10)));
+  const startRating=Math.max(45,Math.min(78,Math.round(baseR*0.55 + t.potBonus + rnd(-3,5))));
+  my.budget -= cost;
+  const positions=rollPositions(createTemp.pos);
+  const skills=rollSkills(positions);
+  const tierKey=createTemp.tier;
+  my.academy.push({
+    id:PID++, name, pos:createTemp.pos, positions, skills,
+    specialSkill:rollSpecialSkill(tierKey),
+    age,
+    rating:startRating, talent:t.talent, tier:tierKey, potential,
+    seasonGoals:0, careerGoals:0, apps:0, assists:0, yellow:0, red:0, cs:0, mvp:0,
+    stamina:100, injury:0, injuryType:'', ratings:[], avgRating:0,
+    goalBonus:ri(2,8)*1e6, assistBonus:ri(1,5)*1e6,
+    csBonus:ri(3,10)*1e6, mvpBonus:ri(5,25)*1e6,
+    lastSeasonBonus:0, contractYears:ri(2,5),
+    weeklyWage:Math.round((baseR*0.5-20)*1e6)
+  });
+  closeCreatePlayer();
+  toast(`✨ ${name} masuk akademi! -${formatIDR(cost)}`);
+  render();
+}
+
+/* ==================== SOUND ==================== */
+let audioCtx=null;
+function beep(freq,dur,type='sine',vol=0.15){
+  if(!state.sound) return;
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
+    o.type=type; o.frequency.value=freq;
+    g.gain.value=vol;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
+    o.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+function sfxGoal(){ beep(880,0.12,'square',0.2); setTimeout(()=>beep(1100,0.15,'square',0.18),100); setTimeout(()=>beep(1320,0.2,'square',0.15),220); }
+function sfxWhistle(){ beep(2000,0.3,'sine',0.1); }
+function sfxCard(){ beep(300,0.15,'sawtooth',0.15); }
+function sfxClick(){ beep(600,0.04,'sine',0.05); }
+function toggleSound(){
+  state.sound=!state.sound;
+  const b=document.getElementById('soundBtn');
+  if(b) b.textContent=state.sound?'🔊':'🔇';
+  sfxClick();
+}
+function toggleTheme(){
+  state.theme = state.theme==='dark' ? 'light' : 'dark';
+  document.body.classList.toggle('light', state.theme==='light');
+  const b=document.getElementById('themeBtn');
+  if(b) b.textContent = state.theme==='dark' ? '🌙' : '☀️';
+  sfxClick();
+}
+
+/* ==================== TOAST ==================== */
+function toast(msg){
+  const d=document.createElement('div');
+  d.className='toast'; d.textContent=msg;
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),1800);
+}
+
+/* ==================== DEV PANEL ==================== */
+function renderDevPanel(){
+  const old=document.getElementById('devPanel');
+  if(old) old.remove();
+  if(!state.dev) return;
+  const my=state.teams[state.myIdx];
+  const budget=my?my.budget:0;
+  const panel=document.createElement('div');
+  panel.id='devPanel';
+  panel.innerHTML=`<div class="inner">
+    <h2>😎 DEV CONSOLE</h2>
+    <div class="sub">Testing · tap judul 5× untuk keluar</div>
+    <div style="background:#16241d;padding:8px;border-radius:8px;font-size:11px;
+      color:#a8e6c1;margin-bottom:10px">
+      Tim: <b>${my?my.name:'-'}</b> · Div ${my?my.div:'-'}<br>
+      Budget: <b style="color:#ffd700">${formatIDR(budget)}</b><br>
+      Pekan: ${state.round+1}/${TOTAL_ROUNDS} · Musim ${state.season}
+    </div>
+    <div class="sect">💰 Ekonomi</div>
+    <button class="btn gold" onclick="devAddBudget(1000e9)">+Rp 1 T</button>
+    <button class="btn gold" onclick="devAddBudget(1000000e9)">+Rp 1 P (jutos)</button>
+    <div class="sect">⭐ Pemain</div>
+    <button class="btn" onclick="devMaxRating()">🔥 Semua pemain jadi 95</button>
+    <button class="btn gold" onclick="devGoldenBoy()">🌟 Suntik Golden Boy</button>
+    <div class="sect">⚽ Pertandingan</div>
+    <button class="btn" onclick="devWinMatch()">🏆 Paksa menang</button>
+    <button class="btn" onclick="devSkipSeason()">⏩ Selesaikan musim</button>
+    <div class="sect">🔄 Struktur</div>
+    <button class="btn" onclick="devForcePromote()">🔀 Pindah divisi</button>
+    <div class="sect">⚠️ Bahaya</div>
+    <button class="btn danger" onclick="if(confirm('Reset total?')){state.dev=false;newGame(state.myIdx??0);}">💥 Reset</button>
+    <button class="btn" style="margin-top:12px" onclick="toggleDev()">✖ Tutup</button>
+  </div>`;
+  document.body.appendChild(panel);
+}
+function devAddBudget(n){
+  if(!state.teams[state.myIdx]) return;
+  state.teams[state.myIdx].budget += n;
+  toast(`💰 +${formatIDR(n)}`);
+  renderDevPanel(); render();
+}
+function devMaxRating(){
+  const my=state.teams[state.myIdx];
+  if(!my) return;
+  my.players.forEach(p=>{p.rating=95; p.potential=95;});
+  my.academy.forEach(p=>{p.rating=80; p.potential=95;});
+  toast('🔥 Semua pemain 95!');
+  renderDevPanel(); render();
+}
+function devGoldenBoy(){
+  const my=state.teams[state.myIdx];
+  if(!my) return;
+  const baseR=avg(my.players.map(p=>p.rating))||75;
+  const gb=makeYouth(baseR);
+  gb.tier='golden'; gb.talent=2.0; gb.potential=96;
+  gb.rating=Math.max(gb.rating,60); gb.age=16;
+  gb.specialSkill=rollSpecialSkill('golden');
+  my.academy.push(gb);
+  toast(`🌟 ${gb.name} (Golden Boy) masuk akademi`);
+  renderDevPanel(); render();
+}
+function devWinMatch(){
+  if(state.view!=='match' || !pendingMatch){ toast('Bukan di layar pertandingan'); return; }
+  const m=pendingMatch;
+  const isHome=m.f.home===state.myIdx;
+  if(isHome){ m.ctx.hg=Math.max(m.ctx.hg,5); m.ctx.ag=0; }
+  else { m.ctx.ag=Math.max(m.ctx.ag,5); m.ctx.hg=0; }
+  toast('🏆 Kemenangan dipaksa!');
+  skipAnim();
+}
+function devSkipSeason(){
+  if(state.round>=TOTAL_ROUNDS) return;
+  while(state.round<TOTAL_ROUNDS){
+    [1,2].forEach(div=>{
+      const round=state.fixtures[div][state.round];
+      if(!round) return;
+      round.forEach(f=>{
+        const h=state.teams[f.home], a=state.teams[f.away];
+        const H=teamStats(h), A=teamStats(a);
+        const ctx={H,A,possH:H.mid/(H.mid+A.mid),hg:0,ag:0,events:[],weather:rollWeather(),homeBoost:0,awayBoost:0};
+        simulateSegment(h,a,1,90,ctx);
+        f.hg=ctx.hg; f.ag=ctx.ag; f.played=true;
+        finalizeMatch(h,a,ctx);
+      });
+    });
+    state.round++;
+  }
+  finalizeSeason();
+  processPromotionRelegation();
+  state.view='seasonEnd';
+  toast('⏩ Musim selesai');
+  renderDevPanel(); render();
+}
+function devForcePromote(){
+  const my=state.teams[state.myIdx];
+  if(!my) return;
+  my.div = my.div===1 ? 2 : 1;
+  state.myDiv = my.div;
+  toast(`🔄 Pindah ke Divisi ${my.div}`);
+  renderDevPanel(); render();
+}
+let devTaps=0, devTimer=null;
+function initDevTrigger(){
+  const h=document.getElementById('appTitle');
+  if(!h) return;
+  h.addEventListener('click',()=>{
+    devTaps++;
+    clearTimeout(devTimer);
+    devTimer=setTimeout(()=>devTaps=0,1500);
+    if(devTaps>=5){ devTaps=0; toggleDev(); }
+  });
+}
+function toggleDev(){
+  state.dev=!state.dev;
+  if(state.dev){
+    toast('😎 DEV MODE AKTIF');
+    const b=document.createElement('div');
+    b.id='devBadge'; b.textContent='DEV';
+    document.body.appendChild(b);
+  } else {
+    const b=document.getElementById('devBadge');
+    if(b) b.remove();
+    toast('Dev mode off');
+  }
+  renderDevPanel();
+}
+
+/* ===== AKHIR BAGIAN 3b ===== */
+
+// [BAGIAN 4 DISISIPKAN DI SINI]
+/* ==================== SAVE / LOAD ==================== */
+const SAVE_SLOTS=[1,2,3];
+const SAVE_PREFIX='ligaSave_v1_';
+function slotKey(n){ return SAVE_PREFIX+n; }
+function saveGame(){
+  if(!state.activeSlot) return;
+  try{
+    const data={state, PID};
+    localStorage.setItem(slotKey(state.activeSlot), JSON.stringify(data));
+  }catch(e){ console.warn('Save failed',e); }
+}
+let saveTimer=null;
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(saveGame, 400);
+}
+function hasSave(n){
+  try{ return !!localStorage.getItem(slotKey(n)); }catch(e){ return false; }
+}
+function loadGame(n){
+  try{
+    const key=slotKey(n||state.activeSlot);
+    const raw=localStorage.getItem(key);
+    if(!raw) return false;
+    const data=JSON.parse(raw);
+    Object.assign(state, data.state);
+    PID=data.PID||0;
+    if(state.fixtures){
+      state.fixtures={
+        1: state.fixtures['1']||state.fixtures[1]||[],
+        2: state.fixtures['2']||state.fixtures[2]||[]
+      };
+    }
+    if(!state.history) state.history=[];
+    if(!state.news) state.news=[];
+    if(!state.training) state.training=[];
+    if(!state.sponsors) state.sponsors=[];
+    if(!state.sponsorOffers) state.sponsorOffers=[];
+    if(!state.acquisitions) state.acquisitions=[];
+    if(!state.allTime) state.allTime={scorers:{},assisters:{},mvp:{},cs:{},apps:{},cards:{}};
+    if(!state.trophyRoom) state.trophyRoom=[];
+    if(state.managerName===undefined) state.managerName='';
+    if(state.managerReputation===undefined) state.managerReputation=50;
+    if(state.fanMood===undefined) state.fanMood=50;
+    if(state.theme===undefined) state.theme='dark';
+    if(state.sound===undefined) state.sound=true;
+    if(state.activeSlot===undefined || state.activeSlot===null) state.activeSlot=n||1;
+    if(state.myIdx!=null && state.teams[state.myIdx]) state.myDiv=state.teams[state.myIdx].div;
+    return true;
+  }catch(e){
+    console.warn('Load failed',e);
+    return false;
+  }
+}
+function deleteSaveSlot(n){
+  try{ localStorage.removeItem(slotKey(n)); }catch(e){}
+}
+function getSlotInfo(n){
+  try{
+    const raw=localStorage.getItem(slotKey(n));
+    if(!raw) return null;
+    const d=JSON.parse(raw);
+    const s=d.state;
+    const my=s.teams && s.myIdx!=null ? s.teams[s.myIdx] : null;
+    return {
+      team: my?my.name:'?',
+      div: my?my.div:'?',
+      season: s.season,
+      round: s.round,
+      history: (s.history||[]).length
+    };
+  }catch(e){ return null; }
+}
+function continueGame(n){
+  if(loadGame(n||state.activeSlot)){
+    state.view='main';
+    state.tab='squad';
+    state.tableDiv=state.myDiv;
+    document.body.classList.toggle('light', state.theme==='light');
+    render();
+    toast('💾 Save dimuat');
+  } else {
+    toast('Gagal memuat save');
+  }
+}
+function deleteSaveAndRefresh(){
+  if(!confirm('Hapus slot aktif?')) return;
+  deleteSaveSlot(state.activeSlot);
+  render();
+}
+
+/* ==================== NEXT ROUND ==================== */
+function nextRound(){
+  // ===== 1. Pemasukan laga kandang dari laga yang baru selesai =====
+  const prevRound=state.round;
+  const prevF=state.fixtures[state.myDiv]?.[prevRound]?.find(f=>f.home===state.myIdx);
+  if(prevF && prevF.played){
+    const myScore=prevF.hg;
+    const oppScore=prevF.ag;
+    const oppTeam=state.teams[prevF.away];
+    const rev=calcHomeMatchRevenue(state.teams[state.myIdx], oppTeam, myScore, oppScore);
+    state.teams[state.myIdx].budget += rev.net;
+    state.lastAttendance=rev.attendance;
+    state.teams[state.myIdx].stadium.revenueHistory.push({...rev, week:state.round});
+    if(state.teams[state.myIdx].stadium.revenueHistory.length>20){
+      state.teams[state.myIdx].stadium.revenueHistory=state.teams[state.myIdx].stadium.revenueHistory.slice(-20);
+    }
+    if(rev.riot){
+      state.news.unshift({t:`🔥 Kerusuhan di stadion! Kerusakan ${formatIDR(rev.riot.damage)}`,time:`Musim ${state.season} · Pekan ${state.round}`});
+      if(state.sound) sfxCard();
+    }
+    if(rev.occ>=0.98){
+      state.news.unshift({t:`🎉 Stadion nyaris penuh! ${rev.attendance.toLocaleString('id-ID')} penonton`,time:`Musim ${state.season} · Pekan ${state.round}`});
+    }
+  }
+
+  // ===== 2. Update harga saham =====
+  if(prevF){
+    const isHome=prevF.home===state.myIdx;
+    updateAllStocks({
+      gf: isHome?prevF.hg:prevF.ag,
+      ga: isHome?prevF.ag:prevF.hg,
+      isHome
+    });
+  } else {
+    updateAllStocks(null);
+  }
+
+  // ===== 3. Increment pekan =====
+  state.round++;
+
+  // ===== 4. Trigger Piala Nasional =====
+  if([5,9,13,17].includes(state.round)){
+    if(!state.pialaNasional) startPialaNasional();
+    if(state.pialaNasional && !state.pialaNasional.finished) playPialaRound();
+  }
+
+  // ===== 5. Berita acak =====
+  addRandomNews();
+  if(Math.random()<0.4) addRandomNews();
+
+  // ===== 6. Cek akhir musim =====
+  if(state.round>=TOTAL_ROUNDS){
+    finalizeSeason();
+    processPromotionRelegation();
+    state.view='seasonEnd';
+  } else {
+    state.view='main';
+    state.tab='klasemen';
+    state.tableDiv=state.myDiv;
+  }
+  render();
+}
+
+/* ==================== FINALIZE SEASON ==================== */
+function finalizeSeason(){
+  // 1. Piala Nusantara
+  startPialaNusantara();
+  if(state.pialaNusantara){
+    let guard=0;
+    while(!state.pialaNusantara.finished && guard++<5){
+      playPialaNusantaraRound();
+    }
+  }
+
+  // 2. Liga Champions Asia
+  startLigaChampions();
+  if(state.ligaChampions){
+    let guardLC=0;
+    while(!state.ligaChampions.finished && guardLC++<5){
+      playLigaChampionsRound();
+    }
+  }
+
+  // 3. Akumulasi statistik sepanjang masa
+  accumulateSeason();
+
+  // 4. Ruang trofi user
+  const seasonNum=state.season;
+  const t1=getTable(1), t2=getTable(2);
+  const myT=state.teams[state.myIdx];
+  if(t1[0] && t1[0].idx===state.myIdx && myT.div===1){
+    state.trophyRoom.push({type:'Juara Divisi 1', season:seasonNum});
+  }
+  if(t2[0] && t2[0].idx===state.myIdx && myT.div===2){
+    state.trophyRoom.push({type:'Juara Divisi 2', season:seasonNum});
+  }
+  if(state.currentPialaNasWinner && state.currentPialaNasWinner.idx===state.myIdx){
+    state.trophyRoom.push({type:'Piala Nasional', season:seasonNum});
+  }
+  if(state.currentPialaNusWinner && state.currentPialaNusWinner.idx===state.myIdx){
+    state.trophyRoom.push({type:'Piala Nusantara', season:seasonNum});
+  }
+  if(state.currentLCWinner && state.currentLCWinner.idx===state.myIdx){
+    state.trophyRoom.push({type:'Liga Champions Asia', season:seasonNum});
+  }
+
+  // 5. Bonus sponsor performa
+  const myResult = myT.div===1 ? t1 : t2;
+  const myRank = myResult.findIndex(r=>r.idx===state.myIdx)+1;
+  const wonLeague = myT.div===1 && myRank===1;
+  const wonDiv2 = myT.div===2 && myRank===1;
+  const isRunnerUp = myRank===2;
+  const isTop4 = myRank>=3 && myRank<=4;
+  state.sponsors.forEach(sp=>{
+    let bonus=0;
+    if(wonLeague) bonus += sp.bonuses.juara_liga||0;
+    if(wonDiv2) bonus += (sp.bonuses.juara_liga||0)*0.4;
+    if(isRunnerUp) bonus += sp.bonuses.runner_up||0;
+    if(isTop4) bonus += sp.bonuses.top4||0;
+    if(state.currentPialaNasWinner && state.currentPialaNasWinner.idx===state.myIdx) bonus += sp.bonuses.juara_piala||0;
+    if(state.currentLCWinner && state.currentLCWinner.idx===state.myIdx) bonus += sp.bonuses.juara_lca||0;
+    if(bonus>0){
+      myT.budget += bonus;
+      sp.bonusesEarned += bonus;
+      sp.totalPaid += bonus;
+      state.news.unshift({t:`💰 ${sp.sponsorName} bayar bonus ${formatIDR(bonus)}`,time:`Musim ${state.season}`});
+    }
+  });
+
+  // 6. Bonus pemain performa
+  let totalPlayerBonus=0;
+  state.teams.forEach(t=>{
+    t.players.forEach(p=>{
+      const gb=(p.goalBonus||0)*p.seasonGoals;
+      const ab=(p.assistBonus||0)*p.assists;
+      const cb=(p.csBonus||0)*p.cs;
+      const mb=(p.mvpBonus||0)*p.mvp;
+      const tot=gb+ab+cb+mb;
+      if(tot>0){
+        t.budget -= tot;
+        p.lastSeasonBonus=tot;
+        if(t===myT) totalPlayerBonus+=tot;
+      }
+    });
+  });
+  if(totalPlayerBonus>0){
+    state.news.unshift({t:`💵 Bonus pemain dibayar: ${formatIDR(totalPlayerBonus)}`,time:`Musim ${state.season}`});
+  }
+
+  // 7. Pendapatan pasif dari akuisisi
+  state.acquisitions.forEach(a=>{
+    const t=state.teams[a.targetIdx];
+    if(!t) return;
+    const tDiv=t.div===1 ? getTable(1) : getTable(2);
+    const pos=tDiv.findIndex(r=>r.idx===a.targetIdx)+1;
+    const baseIncome=calculateClubValue(t)*0.05*a.stake;
+    let posBonus=0;
+    if(pos===1) posBonus=0.5;
+    else if(pos<=3) posBonus=0.25;
+    else if(pos<=8) posBonus=0.10;
+    const totalIncome=Math.round(baseIncome*(1+posBonus));
+    myT.budget+=totalIncome;
+    state.news.unshift({t:`💼 Dividen ${t.name} (${(a.stake*100).toFixed(0)}%) — ${formatIDR(totalIncome)}`,time:`Musim ${state.season}`});
+  });
+
+  // 8. Akses akademi dari akuisisi >= 10%
+  state.acquisitions.forEach(a=>{
+    if(a.stake<0.10) return;
+    const t=state.teams[a.targetIdx];
+    if(!t||!t.academy.length) return;
+    const best=[...t.academy].sort((x,y)=>y.rating-x.rating)[0];
+    if(best && myT.academy.length<15){
+      myT.academy.push({...best, id:PID++});
+      state.news.unshift({t:`🎓 Rekrut dari akademi ${t.name}: ${best.name}`,time:`Musim ${state.season}`});
+    }
+  });
+
+  // 9. Dividen wajib kalau laba besar
+  if(myT.listed && myT.budget>500e9){
+    const divPerShare=20000;
+    const totalCost=myT.shares.total*divPerShare;
+    if(myT.budget>totalCost*1.5){
+      myT.budget -= totalCost;
+      myT.shares.totalDividendPaid+=totalCost;
+      myT.shares.dividendPerShare=divPerShare;
+      state.news.unshift({t:`💵 ${myT.name} bagikan dividen ${formatIDR(divPerShare)}/lembar`,time:`Musim ${state.season}`});
+    }
+  }
+
+  // 10. Reputasi manajer dari market cap
+  if(myT.listed){
+    const mc=myT.shares.total*myT.shares.price;
+    if(mc>2000e9){
+      state.managerReputation=Math.min(100,(state.managerReputation||50)+5);
+      state.news.unshift({t:`🌟 Reputasi ${state.managerName} melonjak — market cap ${formatIDR(mc)}`,time:`Musim ${state.season}`});
+    }
+    if(myT.shares.price < myT.shares.ipoPrice*0.5){
+      state.news.unshift({t:`⚠️ Saham ${myT.name} jatuh >50% dari IPO!`,time:`Musim ${state.season}`});
+      state.fanMood=Math.max(0,(state.fanMood??50)-10);
+    }
+  }
+
+  // 11. Mood suporter dari posisi
+  if(myRank===1){
+    state.fanMood=100;
+    state.news.unshift({t:`🎉 Suporter euforia! Mood mencapai 100!`,time:`Musim ${state.season}`});
+  } else if(myRank<=4){
+    state.fanMood=Math.min(100,(state.fanMood??50)+15);
+  }
+}
+
+/* ==================== PROMOSI / DEGRADASI ==================== */
+function processPromotionRelegation(){
+  const t1=getTable(1), t2=getTable(2);
+  const relegated=t1.slice(-RELEGATED);
+  const promoted=t2.slice(0,PROMOTED);
+  const reldIdx=relegated.map(r=>r.idx);
+  const promIdx=promoted.map(r=>r.idx);
+
+  const myTeam=state.teams[state.myIdx];
+  const oldDiv=myTeam.div;
+  const myResult = oldDiv===1 ? t1 : t2;
+  const myPos = myResult.findIndex(r=>r.idx===state.myIdx)+1;
+
+  // ===== Award collection =====
+  const allPlayers=[];
+  state.teams.forEach(t=>t.players.forEach(p=>allPlayers.push({p,t})));
+  const byMvp=[...allPlayers].sort((a,b)=>b.p.mvp-a.p.mvp);
+  const byGoals=[...allPlayers].sort((a,b)=>b.p.seasonGoals-a.p.seasonGoals);
+  const byAssists=[...allPlayers].sort((a,b)=>b.p.assists-a.p.assists);
+  const byRating=[...allPlayers].sort((a,b)=>b.p.rating-a.p.rating);
+  const youngPool=[...allPlayers].filter(x=>x.p.age<=21).sort((a,b)=>b.p.rating-a.p.rating);
+  const posOrder=['GK','DEF','MID','FWD'];
+  const bestXI=[];
+  posOrder.forEach(pos=>{
+    const take=pos==='GK'?1:pos==='DEF'?4:pos==='MID'?3:3;
+    const list=[...allPlayers].filter(x=>x.p.pos===pos).sort((a,b)=>b.p.rating-a.p.rating).slice(0,take);
+    list.forEach(x=>bestXI.push({name:x.p.name, team:x.t.name, pos, rating:x.p.rating}));
+  });
+
+  // ===== History entry =====
+  state.history.push({
+    season: state.season,
+    div1Champ: {name:t1[0].team.name, pts:t1[0].Pts},
+    div2Champ: {name:t2[0].team.name, pts:t2[0].Pts},
+    myTeam: myTeam.name,
+    myDiv: oldDiv,
+    myPos: myPos,
+    myPts: myResult[myPos-1]?myResult[myPos-1].Pts:0,
+    pialaNasWinner: state.currentPialaNasWinner,
+    pialaNusWinner: state.currentPialaNusWinner,
+    ligaChampWinner: state.currentLCWinner,
+    awardMVP: byMvp[0]?{name:byMvp[0].p.name, team:byMvp[0].t.name, val:byMvp[0].p.mvp}:null,
+    awardTopScorer: byGoals[0]?{name:byGoals[0].p.name, team:byGoals[0].t.name, val:byGoals[0].p.seasonGoals}:null,
+    awardTopAssist: byAssists[0]?{name:byAssists[0].p.name, team:byAssists[0].t.name, val:byAssists[0].p.assists}:null,
+    awardGoldenBoy: youngPool[0]?{name:youngPool[0].p.name, team:youngPool[0].t.name, rating:youngPool[0].p.rating}:null,
+    awardBestRating: byRating[0]?{name:byRating[0].p.name, team:byRating[0].t.name, rating:byRating[0].p.rating}:null,
+    bestXI
+  });
+
+  // ===== Swap divisi =====
+  reldIdx.forEach(i=>state.teams[i].div=2);
+  promIdx.forEach(i=>state.teams[i].div=1);
+
+  let myChange='stayed';
+  if(promIdx.includes(state.myIdx)) myChange='promoted';
+  else if(reldIdx.includes(state.myIdx)) myChange='relegated';
+
+  state.lastPR={
+    relegated: relegated.map(r=>r.team.name),
+    promoted: promoted.map(r=>r.team.name),
+    myName: myTeam.name,
+    myChange,
+    myDiv: myTeam.div
+  };
+  state.myDiv=myTeam.div;
+
+  // Reset flag piala
+  state.currentPialaNasWinner=null;
+  state.currentPialaNusWinner=null;
+  state.currentLCWinner=null;
+}
+
+/* ==================== MUSIM BARU ==================== */
+function startNewSeason(){
+  state.season++;
+  state.pialaNasional=null;
+  state.pialaNusantara=null;
+  state.ligaChampions=null;
+  state.currentPialaNasWinner=null;
+  state.currentPialaNusWinner=null;
+  state.currentLCWinner=null;
+  state.pcAnswered=false;
+  state.training=[];
+  state.lastPR=null;
+
+  state.teams.forEach(t=>{
+    const baseR=avg(t.players.map(p=>p.rating))||60;
+    const recycled=[];
+
+    t.players.forEach(p=>{
+      p.age++;
+      if(p.age>45){
+        recycled.push(makeYouth(baseR, p));
+        return;
+      }
+      const talent=p.talent||1.0;
+      if(p.age<=21) p.rating += Math.round(ri(3,6)*talent);
+      else if(p.age<=25) p.rating += Math.round(ri(2,4)*talent);
+      else if(p.age<=28) p.rating += Math.round(ri(0,2)*talent);
+      else if(p.age<=31) p.rating += ri(-1,1);
+      else if(p.age<=35) p.rating -= ri(1,3);
+      else if(p.age<=40) p.rating -= ri(2,4);
+      else p.rating -= ri(3,6);
+      const cap = p.age<=28 ? (p.potential||95) : 95;
+      p.rating=Math.max(38, Math.min(95, cap, p.rating));
+
+      // Reset season stats
+      p.seasonGoals=0; p.apps=0;
+      p.assists=0; p.yellow=0; p.red=0; p.cs=0; p.mvp=0;
+      p.stamina=100; p.injury=0; p.injuryType='';
+      p.ratings=[]; p.avgRating=0;
+      if(p.contractYears>0) p.contractYears--;
+      p.weeklyWage=weeklyWage(p);
+    });
+
+    // Remove retired
+    t.players=t.players.filter(p=>p.age<=45);
+    t.xi=t.xi.filter(id=>t.players.some(p=>p.id===id));
+
+    // Academy development
+    t.academy.forEach(p=>{
+      p.age++;
+      const gain=ri(2,5)*(p.talent||1.0);
+      p.rating=Math.min(p.potential||85, p.rating+Math.round(gain));
+    });
+    t.academy=t.academy.filter(p=>p.age<=19);
+
+    // Recycle
+    t.academy.push(...recycled);
+
+    // New youth intake
+    const intake=ri(1,3);
+    for(let i=0;i<intake;i++) t.academy.push(makeYouth(baseR));
+
+    // Fix XI
+    if(!checkXI(t) || t.xi.length<11) autoPickXI(t, t.formation);
+
+    // Budget top-up
+    t.budget += (t.div===1?ri(40,90):ri(15,40))*1e9;
+  });
+
+  // Sponsor payments
+  const myT=state.teams[state.myIdx];
+  if(myT){
+    state.sponsors=state.sponsors.filter(sp=>{
+      if(sp.endSeason<state.season){
+        state.news.unshift({t:`📄 Kontrak sponsor ${sp.sponsorName} berakhir.`,time:`Musim ${state.season}`});
+        return false;
+      }
+      if(sp.paymentMode==='monthly' && sp.lastPaidSeason<state.season){
+        myT.budget += sp.annual;
+        sp.lastPaidSeason=state.season;
+        sp.totalPaid += sp.annual;
+      }
+      return true;
+    });
+  }
+
+  // Mood suporter pulih
+  state.fanMood=Math.min(100,(state.fanMood??50)+10);
+
+  // AI formasi acak ulang
+  randomizeAIFormations();
+
+  // Fixtures baru
+  state.fixtures={
+    1: makeFixtures(getDivIndices(1)),
+    2: makeFixtures(getDivIndices(2))
+  };
+  state.round=0;
+  state.view='main';
+  state.tab='squad';
+  state.tableDiv=state.myDiv;
+
+  render();
+}
+
+/* ==================== PWA ==================== */
+(function initPWA(){
+  try{
+    const manifest={
+      name:'Liga Manajer Indonesia',
+      short_name:'LigaManajer',
+      start_url:'.',
+      display:'standalone',
+      background_color:'#0b120f',
+      theme_color:'#16241d',
+      icons:[{
+        src:'data:image/svg+xml;base64,'+btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" fill="#16241d"/><text x="96" y="120" font-size="100" text-anchor="middle" fill="#2ecc71">⚽</text></svg>'),
+        sizes:'192x192',
+        type:'image/svg+xml',
+        purpose:'any'
+      }]
+    };
+    const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+    const link=document.getElementById('pwaManifest');
+    if(link) link.href=URL.createObjectURL(blob);
+    if('serviceWorker' in navigator){
+      const swCode=`self.addEventListener('install',e=>self.skipWaiting());
+        self.addEventListener('activate',e=>self.clients.claim());
+        self.addEventListener('fetch',e=>{e.respondWith(caches.open('liga-v1').then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(res=>{if(res.ok&&res.type==='basic')c.put(e.request,res.clone());return res;}))))});`;
+      const swBlob=new Blob([swCode],{type:'application/javascript'});
+      const swURL=URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swURL).catch(()=>{});
+    }
+  }catch(e){}
+})();
+
+/* ==================== INIT ==================== */
+document.body.classList.toggle('light', state.theme==='light');
+render();
+setTimeout(initDevTrigger, 100);
+// [BAGIAN 4 DISISIPKAN DI SINI]
+
+// [BAGIAN 5 DISISIPKAN DI SINI]
+</script>
+</body>
+  </html>
